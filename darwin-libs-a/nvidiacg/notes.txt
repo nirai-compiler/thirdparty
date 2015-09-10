@@ -1,0 +1,15 @@
+This is Cg 3.1 April 2012 (3.1.0013), downloaded from:
+http://developer.download.nvidia.com/cg/Cg_3.1/Cg-3.1_April2012.dmg
+
+After mounting with "hdiutil attach", the actual tarball is here:
+/Volumes/Cg-3.1.0013/Cg-3.1.0013.app/Contents/Resources/Installer Items/NVIDIA_Cg.tgz
+
+Simply extract Library/Frameworks/Cg.framework from the archive.
+Take care to preserve symlinks - otherwise you end up with duplicate files.
+
+Used the following command to change @executable_path to @loader_path:
+install_name_tool -id @loader_path/../Frameworks/Cg.framework/Cg Cg.framework/Versions/1.0/Cg
+
+License is proprietary.
+
+~rdb

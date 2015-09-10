@@ -1,0 +1,12 @@
+Sun 29 Mar 2015 13:39:41 EDT
+
+This is Eigen 3.2.4, downloaded from:
+http://bitbucket.org/eigen/eigen/get/3.2.4.tar.bz2
+
+No need to compile, since this is a template library.
+Just copy over the Eigen directory.
+
+Eigen is mostly MPL2, and MPL2 or more permissive when compiled
+with the EIGEN_MPL2_ONLY preprocessor symbol.  See COPYING.README.
+
+~rdb

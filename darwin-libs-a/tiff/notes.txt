@@ -1,0 +1,18 @@
+Tue Dec 25 05:33:49 EST 2012
+
+This is libtiff 4.0.3, downloaded from:
+http://download.osgeo.org/libtiff/tiff-4.0.3.tar.gz
+
+Compiled on Mac OS X Leopard using the following commands:
+
+export MACOSX_DEPLOYMENT_TARGET=10.4
+export CFLAGS="-arch x86_64 -arch i386 -arch ppc -arch ppc64 -mmacosx-version-min=10.4 -fPIC"
+export CXXFLAGS="-arch x86_64 -arch i386 -arch ppc -arch ppc64 -mmacosx-version-min=10.4 -fPIC"
+export LDFLAGS="-arch x86_64 -arch i386 -arch ppc -arch ppc64 -mmacosx-version-min=10.4"
+mkdir prefix
+./configure --disable-dependency-tracking --disable-shared --prefix=`pwd`/prefix
+make && make install
+
+License is permissive, see COPYRIGHT file.
+
+~rdb

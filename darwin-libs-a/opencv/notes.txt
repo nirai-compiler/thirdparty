@@ -1,0 +1,30 @@
+Sat 19 Jan 2013 10:19:23 CET
+
+This is OpenCV 2.4.3, downloaded from:
+http://sourceforge.net/projects/opencvlibrary/files/opencv-unix/2.4.3/OpenCV-2.4.3.tar.bz2
+
+To make it compile for 10.4, I had to replace kCVPixelFormatType_32BGRA with 'BGRA' in modules/highgui/src/cap_qtkit.mm.
+
+32-bits build made on Leopard:
+export MACOSX_DEPLOYMENT_TARGET=10.4
+mkdir build32 dest32
+cd build32
+cmake .. -DWITH_CARBON=ON -DWITH_COCOA=OFF -DBUILD_ZLIB=OFF -DPYTHON_USE_NUMPY=OFF -DBUILD_DOCS=OFF -DBUILD_TESTS=OFF -DCMAKE_OSX_SYSROOT=/Developer/SDKs/MacOSX10.4u.sdk -DCMAKE_OSX_ARCHITECTURES="i386;ppc" -DCMAKE_OSX_DEPLOYMENT_TARGET=10.4 -DWITH_CUDA=OFF -DENABLE_PRECOMPILED_HEADERS=OFF
+make
+make install DESTDIR=`pwd`/../dest32
+
+64-bits build made on Lion:
+mkdir build64 dest64
+cd build64
+cmake .. -DWITH_CARBON=OFF -DWITH_COCOA=ON -DBUILD_ZLIB=OFF -DPYTHON_USE_NUMPY=OFF -DBUILD_DOCS=OFF -DBUILD_TESTS=OFF -DCMAKE_OSX_SYSROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk -DCMAKE_OSX_ARCHITECTURES="x86_64" -DCMAKE_OSX_DEPLOYMENT_TARGET=10.6 -DWITH_CUDA=OFF -DENABLE_PRECOMPILED_HEADERS=OFF
+make
+make install DESTDIR=`pwd`/../dest64
+
+Libraries were then combined using lipo (remember to keep symlinks intact).  install_name_tool has to be used to fix the 'lib/' prefix for the libraries.
+
+I deleted the libraries we don't need so that we don't bloat the distribution too much.
+Only highgui and its dependencies (imgproc, core) were kept.
+
+License is permissive, see license.txt file.
+
+~rdb

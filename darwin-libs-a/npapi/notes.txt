@@ -1,0 +1,8 @@
+Tue  5 Feb 2013 11:24:31 CET
+
+This is npapi-sdk SVN revision 23, from:
+http://code.google.com/p/npapi-sdk/
+
+License is MPL 1.1, see header files.
+
+~rdb

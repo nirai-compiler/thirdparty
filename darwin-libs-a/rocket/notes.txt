@@ -1,0 +1,59 @@
+Sat Mar 28 06:25:27 EDT 2015
+
+This includes boost 1.57.0, downloaded from:
+http://sourceforge.net/projects/boost/files/boost/1.57.0/boost_1_57_0.tar.bz2
+
+Ran ./bootstrap.sh to bootstrap the boost build tools.
+
+Replaced the generated project-config.jam with the following:
+import option ;
+import feature ;
+using darwin ;
+project : default-build <toolset>darwin ;
+using python : 2.7 : /Users/rdb/panda3d/thirdparty/darwin-libs-a/python/ : /Users/rdb/panda3d/thirdparty/darwin-libs-a/python/include : /Users/rdb/panda3d/thirdparty/darwin-libs-a/python/lib ;
+libraries =  --with-python ;
+option.set prefix : /usr/local ;
+option.set exec-prefix : /usr/local ;
+option.set libdir : /usr/local/lib ;
+option.set includedir : /usr/local/include ;
+option.set keep-going : false ;
+
+Had to edit tools/build/src/tools/darwin.jam and changed the init-available-sdk-versions rule in its entirety to this:
+
+root = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer ;
+local sdk-version = mac 10 6 ;
+return [ init-sdk $(condition) : $(root)/SDKs/MacOSX10.6.sdk : $(sdk-version) ] ;
+
+Built with:
+export MACOSX_DEPLOYMENT_TARGET=10.6
+./b2 --layout=versioned architecture=x86 address-model=32_64 macosx-version=10.6 macosx-version-min=10.6 -d+2
+
+Then I built bcp and used it to copy the headers:
+(cd tools/bcp && ../../bjam)
+dist/bin/bcp boost/python.hpp ~/panda3d/thirdparty/darwin-libs-a/rocket/include/
+It also copies a "libs" directory and Jamroot file, which can be deleted.
+
+Now libRocket.  Checked out from git:
+https://github.com/libRocket/libRocket
+Revision as of checkout: 8fbfb01485cbf57f337f7d99664283425ee6fbe6
+
+CMake settings:
+BUILD_PYTHON_BINDINGS=ON
+CMAKE_OSX_ARCHITECTURES=i386;x86_64
+CMAKE_OSX_DEPLOYMENT_TARGET=10.6
+CMAKE_OSX_SYSROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk
+Boost_INCLUDE_DIR=/Users/rdb/src/boost_1_57_0
+Boost_PYTHON_LIBRARY_RELEASE=/Users/rdb/src/boost_1_57_0/stage/lib/libboost_python-xgcc42-mt-1_57.dylib
+PYTHON_EXECUTABLE=/Users/rdb/panda3d/thirdparty/darwin-libs-a/python/bin/python2.7
+PYTHON_INCLUDE_DIR= /Users/rdb/panda3d/thirdparty/darwin-libs-a/python/include
+PYTHON_LIBRARY= /Users/rdb/panda3d/thirdparty/darwin-libs-a/python/lib/libpython2.7.dylib
+
+License is MIT, see readme.md file.
+
+~rdb
+
+Wed May  6 20:52:43 EDT 2015
+
+Updated to include missing libboost_python-xgcc42-mt-1_57.dylib - oops!
+
+~rdb
