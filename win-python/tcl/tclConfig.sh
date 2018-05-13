@@ -8,8 +8,6 @@
 # out for themselves.
 #
 # The information in this file is specific to a single platform.
-#
-# RCS: @(#) $Id: tclConfig.sh.in,v 1.8 2001/11/08 03:07:22 mdejong Exp $
 
 TCL_DLL_FILE="tcl85.dll"
 
@@ -17,25 +15,25 @@ TCL_DLL_FILE="tcl85.dll"
 TCL_VERSION='8.5'
 TCL_MAJOR_VERSION='8'
 TCL_MINOR_VERSION='5'
-TCL_PATCH_LEVEL='8.5.2'
+TCL_PATCH_LEVEL='8.5.15'
 
 # C compiler to use for compilation.
 TCL_CC='cl'
 
 # -D flags for use with the C compiler.
-TCL_DEFS='-nologo -c -DWINVER=0x0500 -D_WIN32_WINNT=0x0500 -DNTDDI_VERSION=NTDDI_WIN2KSP4 -W3 -D _CRT_SECURE_NO_DEPRECATE -D _CRT_NONSTDC_NO_DEPRECATE -Fp.\Release_86_VC9\tcl_Dynamic\ -O2  -Ot -Oi -fp:strict -Gs -GS -GL -MD -I"..\win" -I"..\generic" -I"..\libtommath" -DTCL_PIPE_DLL=\"tclpip85.dll\" -DTCL_TOMMATH -DMP_PREC=4 -Dinline=__inline -DTCL_CFGVAL_ENCODING=\"cp1252\" -DSTDC_HEADERS -DTCL_CFG_OPTIMIZED'
+TCL_DEFS='-nologo -c -W3 -W3 -D _CRT_SECURE_NO_DEPRECATE -D _CRT_NONSTDC_NO_DEPRECATE -Fp.\Release_VC9\tcl_Dynamic\ -O2  -Ot -Oi -fp:strict -Gs -GS -GL -MD -I"..\win" -I"..\generic" -I"..\libtommath" -DTCL_PIPE_DLL=\"tclpip85.dll\" -DTCL_TOMMATH -DMP_PREC=4 -Dinline=__inline -DTCL_CFGVAL_ENCODING=\"cp1252\" -DSTDC_HEADERS -DNDEBUG -DTCL_CFG_OPTIMIZED'
 
 # If TCL was built with debugging symbols, generated libraries contain
 # this string at the end of the library name (before the extension).
 TCL_DBGX=
 
 # Default flags used in an optimized and debuggable build, respectively.
-TCL_CFLAGS_DEBUG='-nologo -c -W3 -YX -Fp.\Release_86_VC9\tcl_Dynamic\ -MDd'
-TCL_CFLAGS_OPTIMIZE='-nologo -c -W3 -YX -Fp.\Release_86_VC9\tcl_Dynamic\ -MD'
+TCL_CFLAGS_DEBUG='-nologo -c -W3 -YX -Fp.\Release_VC9\tcl_Dynamic\ -MDd'
+TCL_CFLAGS_OPTIMIZE='-nologo -c -W3 -YX -Fp.\Release_VC9\tcl_Dynamic\ -MD'
 
 # Default linker flags used in an optimized and debuggable build, respectively.
-TCL_LDFLAGS_DEBUG='-nologo -machine:X86 -debug:full -debugtype:cv'
-TCL_LDFLAGS_OPTIMIZE='-nologo -machine:X86 -release -opt:ref -opt:icf,3'
+TCL_LDFLAGS_DEBUG='-nologo -machine:IX86 -debug -debugtype:cv'
+TCL_LDFLAGS_OPTIMIZE='-nologo -machine:IX86 -release -opt:ref -opt:icf,3'
 
 # Flag, 1: we built a shared lib, 0 we didn't
 TCL_SHARED_BUILD=1
@@ -57,11 +55,11 @@ TCL_LIBS='kernel32.lib user32.lib ws2_32.lib'
 
 # Top-level directory in which Tcl's platform-independent files are
 # installed.
-TCL_PREFIX='C:\Users\martin\32\tcltk'
+TCL_PREFIX='C:\build27\cpython\externals\tcltk'
 
 # Top-level directory in which Tcl's platform-specific files (e.g.
 # executables) are installed.
-TCL_EXEC_PREFIX='C:\Users\martin\32\tcltk\bin'
+TCL_EXEC_PREFIX='C:\build27\cpython\externals\tcltk\bin'
 
 # Flags to pass to cc when compiling the components of a shared library:
 TCL_SHLIB_CFLAGS=''
@@ -73,7 +71,7 @@ TCL_CFLAGS_WARNING='-W3'
 TCL_EXTRA_CFLAGS='-YX'
 
 # Base command to use for combining object files into a shared library:
-TCL_SHLIB_LD='link -nologo -machine:X86 -ltcg -release -opt:ref -opt:icf,3 -dll'
+TCL_SHLIB_LD='link -nologo -machine:IX86 -ltcg -release -opt:ref -opt:icf,3 -opt:nowin98 -dll'
 
 # Base command to use for combining object files into a static library:
 TCL_STLIB_LD='lib -nologo'
@@ -116,11 +114,11 @@ TCL_BUILD_LIB_SPEC=''
 
 # String to pass to linker to pick up the Tcl library from its
 # installed directory.
-TCL_LIB_SPEC='C:\Users\martin\32\tcltk\lib\tcl85.lib'
+TCL_LIB_SPEC='C:\build27\cpython\externals\tcltk\lib\tcl85.lib'
 
 # String to pass to the compiler so that an extension can
 # find installed Tcl headers.
-TCL_INCLUDE_SPEC='-IC:\Users\martin\32\tcltk\include'
+TCL_INCLUDE_SPEC='-IC:\build27\cpython\externals\tcltk\include'
 
 # Indicates whether a version numbers should be used in -l switches
 # ("ok" means it's safe to use switches like -ltcl7.5;  "nodots" means
@@ -165,17 +163,17 @@ TCL_STUB_LIB_FLAG='tclstub85.lib'
 
 # String to pass to linker to pick up the Tcl stub library from its
 # build directory.
-TCL_BUILD_STUB_LIB_SPEC='-L.\Release_X86_VC9 tclstub85.lib'
+TCL_BUILD_STUB_LIB_SPEC='-L.\Release_VC9 tclstub85.lib'
 
 # String to pass to linker to pick up the Tcl stub library from its
 # installed directory.
-TCL_STUB_LIB_SPEC='-LC:\Users\martin\32\tcltk\lib tclstub85.lib'
+TCL_STUB_LIB_SPEC='-LC:\build27\cpython\externals\tcltk\lib tclstub85.lib'
 
 # Path to the Tcl stub library in the build directory.
-TCL_BUILD_STUB_LIB_PATH='.\Release_X86_VC9\tclstub85.lib'
+TCL_BUILD_STUB_LIB_PATH='.\Release_VC9\tclstub85.lib'
 
 # Path to the Tcl stub library in the install directory.
-TCL_STUB_LIB_PATH='C:\Users\martin\32\tcltk\lib\tclstub85.lib'
+TCL_STUB_LIB_PATH='C:\build27\cpython\externals\tcltk\lib\tclstub85.lib'
 
 # Flag, 1: we built Tcl with threads enables, 0 we didn't
 TCL_THREADS=0

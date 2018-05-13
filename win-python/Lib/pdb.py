@@ -1095,7 +1095,7 @@ command with a 'global' command, e.g.:
     def help_run(self):
         print """run [args...]
 Restart the debugged python program. If a string is supplied, it is
-splitted with "shlex" and the result is used as the new sys.argv.
+split with "shlex" and the result is used as the new sys.argv.
 History, breakpoints, actions and debugger options are preserved.
 "restart" is an alias for "run"."""
 
@@ -1322,6 +1322,9 @@ def main():
             # In most cases SystemExit does not warrant a post-mortem session.
             print "The program exited via sys.exit(). Exit status: ",
             print sys.exc_info()[1]
+        except SyntaxError:
+            traceback.print_exc()
+            sys.exit(1)
         except:
             traceback.print_exc()
             print "Uncaught exception. Entering post mortem debugging"

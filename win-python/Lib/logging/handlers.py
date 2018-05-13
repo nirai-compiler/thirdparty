@@ -137,9 +137,11 @@ class RotatingFileHandler(BaseRotatingHandler):
             dfn = self.baseFilename + ".1"
             if os.path.exists(dfn):
                 os.remove(dfn)
-            os.rename(self.baseFilename, dfn)
-            #print "%s -> %s" % (self.baseFilename, dfn)
-        self.stream = self._open()
+            # Issue 18940: A file may not have been created if delay is True.
+            if os.path.exists(self.baseFilename):
+                os.rename(self.baseFilename, dfn)
+        if not self.delay:
+            self.stream = self._open()
 
     def shouldRollover(self, record):
         """
@@ -343,17 +345,14 @@ class TimedRotatingFileHandler(BaseRotatingHandler):
         dfn = self.baseFilename + "." + time.strftime(self.suffix, timeTuple)
         if os.path.exists(dfn):
             os.remove(dfn)
-        os.rename(self.baseFilename, dfn)
+        # Issue 18940: A file may not have been created if delay is True.
+        if os.path.exists(self.baseFilename):
+            os.rename(self.baseFilename, dfn)
         if self.backupCount > 0:
-            # find the oldest log file and delete it
-            #s = glob.glob(self.baseFilename + ".20*")
-            #if len(s) > self.backupCount:
-            #    s.sort()
-            #    os.remove(s[0])
             for s in self.getFilesToDelete():
                 os.remove(s)
-        #print "%s -> %s" % (self.baseFilename, dfn)
-        self.stream = self._open()
+        if not self.delay:
+            self.stream = self._open()
         newRolloverAt = self.computeRollover(currentTime)
         while newRolloverAt <= currentTime:
             newRolloverAt = newRolloverAt + self.interval
@@ -424,6 +423,7 @@ class WatchedFileHandler(logging.FileHandler):
                 # we have an open file handle, clean it up
                 self.stream.flush()
                 self.stream.close()
+                self.stream = None  # See Issue #21742: _open () might fail.
                 # open a new file handle and get new stat info from that fd
                 self.stream = self._open()
                 self._statstream()
@@ -588,9 +588,10 @@ class SocketHandler(logging.Handler):
         """
         self.acquire()
         try:
-            if self.sock:
-                self.sock.close()
+            sock = self.sock
+            if sock:
                 self.sock = None
+                sock.close()
         finally:
             self.release()
         logging.Handler.close(self)
@@ -840,22 +841,23 @@ class SysLogHandler(logging.Handler):
         The record is formatted, and then sent to the syslog server. If
         exception information is present, it is NOT sent to the server.
         """
-        msg = self.format(record) + '\000'
-        """
-        We need to convert record level to lowercase, maybe this will
-        change in the future.
-        """
-        prio = '<%d>' % self.encodePriority(self.facility,
-                                            self.mapPriority(record.levelname))
-        # Message is a string. Convert to bytes as required by RFC 5424
-        if type(msg) is unicode:
-            msg = msg.encode('utf-8')
-        msg = prio + msg
         try:
+            msg = self.format(record) + '\000'
+            """
+            We need to convert record level to lowercase, maybe this will
+            change in the future.
+            """
+            prio = '<%d>' % self.encodePriority(self.facility,
+                                                self.mapPriority(record.levelname))
+            # Message is a string. Convert to bytes as required by RFC 5424
+            if type(msg) is unicode:
+                msg = msg.encode('utf-8')
+            msg = prio + msg
             if self.unixsocket:
                 try:
                     self.socket.send(msg)
                 except socket.error:
+                    self.socket.close() # See issue 17981
                     self._connect_unixsocket(self.address)
                     self.socket.send(msg)
             elif self.socktype == socket.SOCK_DGRAM:
@@ -888,11 +890,11 @@ class SMTPHandler(logging.Handler):
         certificate file. (This tuple is passed to the `starttls` method).
         """
         logging.Handler.__init__(self)
-        if isinstance(mailhost, tuple):
+        if isinstance(mailhost, (list, tuple)):
             self.mailhost, self.mailport = mailhost
         else:
             self.mailhost, self.mailport = mailhost, None
-        if isinstance(credentials, tuple):
+        if isinstance(credentials, (list, tuple)):
             self.username, self.password = credentials
         else:
             self.username = None
@@ -1067,7 +1069,7 @@ class HTTPHandler(logging.Handler):
         """
         Default implementation of mapping the log record into a dict
         that is sent as the CGI data. Overwrite in your class.
-        Contributed by Franz  Glasner.
+        Contributed by Franz Glasner.
         """
         return record.__dict__
 
@@ -1159,8 +1161,10 @@ class BufferingHandler(logging.Handler):
 
         This version just flushes and chains to the parent class' close().
         """
-        self.flush()
-        logging.Handler.close(self)
+        try:
+            self.flush()
+        finally:
+            logging.Handler.close(self)
 
 class MemoryHandler(BufferingHandler):
     """
@@ -1212,10 +1216,12 @@ class MemoryHandler(BufferingHandler):
         """
         Flush, set the target to None and lose the buffer.
         """
-        self.flush()
-        self.acquire()
         try:
-            self.target = None
-            BufferingHandler.close(self)
+            self.flush()
         finally:
-            self.release()
+            self.acquire()
+            try:
+                self.target = None
+                BufferingHandler.close(self)
+            finally:
+                self.release()

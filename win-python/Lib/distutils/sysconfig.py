@@ -165,7 +165,8 @@ def customize_compiler(compiler):
             # version and build tools may not support the same set
             # of CPU architectures for universal builds.
             global _config_vars
-            if not _config_vars.get('CUSTOMIZED_OSX_COMPILER', ''):
+            # Use get_config_var() to ensure _config_vars is initialized.
+            if not get_config_var('CUSTOMIZED_OSX_COMPILER'):
                 import _osx_support
                 _osx_support.customize_compiler(_config_vars)
                 _config_vars['CUSTOMIZED_OSX_COMPILER'] = 'True'
@@ -175,9 +176,15 @@ def customize_compiler(compiler):
                             'CCSHARED', 'LDSHARED', 'SO', 'AR',
                             'ARFLAGS')
 
-        newcc = None
         if 'CC' in os.environ:
-            cc = os.environ['CC']
+            newcc = os.environ['CC']
+            if (sys.platform == 'darwin'
+                    and 'LDSHARED' not in os.environ
+                    and ldshared.startswith(cc)):
+                # On OS X, if CC is overridden, use that as the default
+                #       command for LDSHARED as well
+                ldshared = newcc + ldshared[len(cc):]
+            cc = newcc
         if 'CXX' in os.environ:
             cxx = os.environ['CXX']
         if 'LDSHARED' in os.environ:

@@ -1,0 +1,9 @@
+Sat, 21 Nov 2015 14:13:43 +0100
+
+This is FMod Ex 4.44.59, downloaded from:
+http://www.fmod.org/download/fmodex/api/Win/fmodapi44459win-installer.exe
+
+FMod is free for non-commercial use, but requires additional credit.
+See LICENSE.TXT for the details.
+
+~rdb

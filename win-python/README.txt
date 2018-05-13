@@ -1,8 +1,8 @@
-This is Python version 2.7.5
-============================
+This is Python version 2.7.13
+=============================
 
 Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011,
-2012, 2013 Python Software Foundation.  All rights reserved.
+2012, 2013, 2014, 2015, 2016 Python Software Foundation.  All rights reserved.
 
 Copyright (c) 2000 BeOpen.com.
 All rights reserved.
@@ -89,6 +89,13 @@ reStructuredText (2.6+) formats; the LaTeX and reStructuredText versions are
 primarily for documentation authors, translators, and people with special
 formatting requirements.
 
+If you would like to contribute to the development of Python, relevant
+documentation is available at:
+
+    http://docs.python.org/devguide/
+
+For information about building Python's documentation, refer to Doc/README.txt.
+
 
 Web sites
 ---------
@@ -166,6 +173,11 @@ rebuilt.  In this case, you may have to run make again to correctly
 build your desired target.  The interpreter executable is built in the
 top level directory.
 
+To get an optimized build of Python, "configure --enable-optimizations" before
+you run make.  This sets the default make targets up to enable Profile Guided
+Optimization (PGO) and may be used to auto-enable Link Time Optimization (LTO)
+on some platforms.  For more details, see the sections bellow.
+
 Once you have built a Python interpreter, see the subsections below on
 testing and installation.  If you run into trouble, see the next
 section.
@@ -176,6 +188,39 @@ and manual configuration is still supported, it is rarely needed any
 more: almost all modules are automatically built as appropriate under
 guidance of the setup.py script, which is run by Make after the
 interpreter has been built.
+
+
+Profile Guided Optimization
+---------------------------
+
+PGO takes advantage of recent versions of the GCC or Clang compilers.
+If ran, "make profile-opt" will do several steps.
+
+First, the entire Python directory is cleaned of temporary files that
+may have resulted in a previous compilation.
+
+Then, an instrumented version of the interpreter is built, using suitable
+compiler flags for each flavour. Note that this is just an intermediary
+step and the binary resulted after this step is not good for real life
+workloads, as it has profiling instructions embedded inside.
+
+After this instrumented version of the interpreter is built, the Makefile
+will automatically run a training workload. This is necessary in order to
+profile the interpreter execution. Note also that any output, both stdout
+and stderr, that may appear at this step is suppressed.
+
+Finally, the last step is to rebuild the interpreter, using the information
+collected in the previous one. The end result will be a Python binary
+that is optimized and suitable for distribution or production installation.
+
+
+Link Time Optimization
+----------------------
+
+Enabled via configure's --with-lto flag.  LTO takes advantages of recent
+compiler toolchains ability to optimize across the otherwise arbitrary .o file
+boundary when building final executables or shared libraries for additional
+performance gains.
 
 
 Troubleshooting

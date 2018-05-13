@@ -175,7 +175,7 @@ def parse(fp=None, environ=os.environ, keep_blank_values=0, strict_parsing=0):
 
 
 # parse query string function called from urlparse,
-# this is done in order to maintain backward compatiblity.
+# this is done in order to maintain backward compatibility.
 
 def parse_qs(qs, keep_blank_values=0, strict_parsing=0):
     """Parse a query given as a string argument."""
@@ -697,6 +697,9 @@ class FieldStorage:
             if not line:
                 self.done = -1
                 break
+            if delim == "\r":
+                line = delim + line
+                delim = ""
             if line[:2] == "--" and last_line_lfend:
                 strippedline = line.strip()
                 if strippedline == next:
@@ -713,6 +716,12 @@ class FieldStorage:
                 delim = "\n"
                 line = line[:-1]
                 last_line_lfend = True
+            elif line[-1] == "\r":
+                # We may interrupt \r\n sequences if they span the 2**16
+                # byte boundary
+                delim = "\r"
+                line = line[:-1]
+                last_line_lfend = False
             else:
                 delim = ""
                 last_line_lfend = False

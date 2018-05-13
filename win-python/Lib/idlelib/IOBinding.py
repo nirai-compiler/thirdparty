@@ -5,25 +5,20 @@
 #     end-of-line conventions, instead of relying on the standard library,
 #     which will only understand the local convention.
 
-import os
-import types
-import pipes
-import sys
 import codecs
+from codecs import BOM_UTF8
+import os
+import pipes
+import re
+import sys
 import tempfile
+
+from Tkinter import *
 import tkFileDialog
 import tkMessageBox
-import re
-from Tkinter import *
 from SimpleDialog import SimpleDialog
 
 from idlelib.configHandler import idleConf
-
-try:
-    from codecs import BOM_UTF8
-except ImportError:
-    # only available since Python 2.3
-    BOM_UTF8 = '\xef\xbb\xbf'
 
 # Try setting the locale, so that we can find out
 # what encoding to use
@@ -71,7 +66,8 @@ else:
 
 encoding = encoding.lower()
 
-coding_re = re.compile("coding[:=]\s*([-\w_.]+)")
+coding_re = re.compile(r'^[ \t\f]*#.*?coding[:=][ \t]*([-\w.]+)')
+blank_re = re.compile(r'^[ \t\f]*(?:[#\r\n]|$)')
 
 class EncodingMessage(SimpleDialog):
     "Inform user that an encoding declaration is needed."
@@ -96,6 +92,7 @@ class EncodingMessage(SimpleDialog):
         # l2['state'] = DISABLED
         l2.pack(side=TOP, anchor = W, fill=X)
         l3 = Label(top, text="to your file\n"
+                   "See Language Reference, 2.1.4 Encoding declarations.\n"
                    "Choose OK to save this file as %s\n"
                    "Edit your general options to silence this warning" % enc)
         l3.pack(side=TOP, anchor = W)
@@ -125,11 +122,14 @@ def coding_spec(str):
     Raise LookupError if the encoding is declared but unknown.
     """
     # Only consider the first two lines
-    str = str.split("\n")[:2]
-    str = "\n".join(str)
-
-    match = coding_re.search(str)
-    if not match:
+    lst = str.split("\n", 2)[:2]
+    for line in lst:
+        match = coding_re.match(line)
+        if match is not None:
+            break
+        if not blank_re.match(line):
+            return None
+    else:
         return None
     name = match.group(1)
     # Check whether the encoding is known
@@ -140,7 +140,6 @@ def coding_spec(str):
         # The standard encoding error does not indicate the encoding
         raise LookupError, "Unknown encoding "+name
     return name
-
 
 class IOBinding:
 
@@ -248,11 +247,10 @@ class IOBinding:
         try:
             # open the file in binary mode so that we can handle
             #   end-of-line convention ourselves.
-            f = open(filename,'rb')
-            chars = f.read()
-            f.close()
-        except IOError, msg:
-            tkMessageBox.showerror("I/O Error", str(msg), master=self.text)
+            with open(filename, 'rb') as f:
+                chars = f.read()
+        except IOError as msg:
+            tkMessageBox.showerror("I/O Error", str(msg), parent=self.text)
             return False
 
         chars = self.decode(chars)
@@ -294,12 +292,12 @@ class IOBinding:
         # Next look for coding specification
         try:
             enc = coding_spec(chars)
-        except LookupError, name:
+        except LookupError as name:
             tkMessageBox.showerror(
                 title="Error loading the file",
                 message="The encoding '%s' is not known to this Python "\
                 "installation. The file may not display correctly" % name,
-                master = self.text)
+                parent = self.text)
             enc = None
         if enc:
             try:
@@ -329,7 +327,7 @@ class IOBinding:
                   title="Save On Close",
                   message=message,
                   default=tkMessageBox.YES,
-                  master=self.text)
+                  parent=self.text)
         if confirm:
             reply = "yes"
             self.save(None)
@@ -383,18 +381,16 @@ class IOBinding:
         if self.eol_convention != "\n":
             chars = chars.replace("\n", self.eol_convention)
         try:
-            f = open(filename, "wb")
-            f.write(chars)
-            f.flush()
-            f.close()
+            with open(filename, "wb") as f:
+                f.write(chars)
             return True
-        except IOError, msg:
+        except IOError as msg:
             tkMessageBox.showerror("I/O Error", str(msg),
-                                   master=self.text)
+                                   parent=self.text)
             return False
 
     def encode(self, chars):
-        if isinstance(chars, types.StringType):
+        if isinstance(chars, str):
             # This is either plain ASCII, or Tk was returning mixed-encoding
             # text to us. Don't try to guess further.
             return chars
@@ -408,7 +404,7 @@ class IOBinding:
         try:
             enc = coding_spec(chars)
             failed = None
-        except LookupError, msg:
+        except LookupError as msg:
             failed = msg
             enc = None
         if enc:
@@ -420,7 +416,7 @@ class IOBinding:
             tkMessageBox.showerror(
                 "I/O Error",
                 "%s. Saving as UTF-8" % failed,
-                master = self.text)
+                parent = self.text)
         # If there was a UTF-8 signature, use that. This should not fail
         if self.fileencoding == BOM_UTF8 or failed:
             return BOM_UTF8 + chars.encode("utf-8")
@@ -433,7 +429,7 @@ class IOBinding:
                     "I/O Error",
                     "Cannot save this as '%s' anymore. Saving as UTF-8" \
                     % self.fileencoding,
-                    master = self.text)
+                    parent = self.text)
                 return BOM_UTF8 + chars.encode("utf-8")
         # Nothing was declared, and we had not determined an encoding
         # on loading. Recommend an encoding line.
@@ -477,7 +473,7 @@ class IOBinding:
                   title="Print",
                   message="Print to Default Printer",
                   default=tkMessageBox.OK,
-                  master=self.text)
+                  parent=self.text)
         if not confirm:
             self.text.focus_set()
             return "break"
@@ -514,10 +510,10 @@ class IOBinding:
                          status + output
             if output:
                 output = "Printing command: %s\n" % repr(command) + output
-                tkMessageBox.showerror("Print status", output, master=self.text)
+                tkMessageBox.showerror("Print status", output, parent=self.text)
         else:  #no printing for this platform
             message = "Printing is not enabled for this platform: %s" % platform
-            tkMessageBox.showinfo("Print status", message, master=self.text)
+            tkMessageBox.showinfo("Print status", message, parent=self.text)
         if tempfilename:
             os.unlink(tempfilename)
         return "break"
@@ -531,10 +527,12 @@ class IOBinding:
         ("All files", "*"),
         ]
 
+    defaultextension = '.py' if sys.platform == 'darwin' else ''
+
     def askopenfile(self):
         dir, base = self.defaultfilename("open")
         if not self.opendialog:
-            self.opendialog = tkFileDialog.Open(master=self.text,
+            self.opendialog = tkFileDialog.Open(parent=self.text,
                                                 filetypes=self.filetypes)
         filename = self.opendialog.show(initialdir=dir, initialfile=base)
         if isinstance(filename, unicode):
@@ -556,8 +554,10 @@ class IOBinding:
     def asksavefile(self):
         dir, base = self.defaultfilename("save")
         if not self.savedialog:
-            self.savedialog = tkFileDialog.SaveAs(master=self.text,
-                                                  filetypes=self.filetypes)
+            self.savedialog = tkFileDialog.SaveAs(
+                    parent=self.text,
+                    filetypes=self.filetypes,
+                    defaultextension=self.defaultextension)
         filename = self.savedialog.show(initialdir=dir, initialfile=base)
         if isinstance(filename, unicode):
             filename = filename.encode(filesystemencoding)
@@ -567,33 +567,44 @@ class IOBinding:
         "Update recent file list on all editor windows"
         self.editwin.update_recent_files_list(filename)
 
-def test():
-    root = Tk()
+
+def _io_binding(parent):  # htest #
+    from Tkinter import Toplevel, Text
+
+    root = Toplevel(parent)
+    root.title("Test IOBinding")
+    width, height, x, y = list(map(int, re.split('[x+]', parent.geometry())))
+    root.geometry("+%d+%d"%(x, y + 150))
     class MyEditWin:
         def __init__(self, text):
             self.text = text
             self.flist = None
             self.text.bind("<Control-o>", self.open)
+            self.text.bind('<Control-p>', self.printer)
             self.text.bind("<Control-s>", self.save)
-            self.text.bind("<Alt-s>", self.save_as)
-            self.text.bind("<Alt-z>", self.save_a_copy)
+            self.text.bind("<Alt-s>", self.saveas)
+            self.text.bind('<Control-c>', self.savecopy)
         def get_saved(self): return 0
         def set_saved(self, flag): pass
         def reset_undo(self): pass
+        def update_recent_files_list(self, filename): pass
         def open(self, event):
             self.text.event_generate("<<open-window-from-file>>")
+        def printer(self, event):
+            self.text.event_generate("<<print-window>>")
         def save(self, event):
             self.text.event_generate("<<save-window>>")
-        def save_as(self, event):
+        def saveas(self, event):
             self.text.event_generate("<<save-window-as-file>>")
-        def save_a_copy(self, event):
+        def savecopy(self, event):
             self.text.event_generate("<<save-copy-of-window-as-file>>")
+
     text = Text(root)
     text.pack()
     text.focus_set()
     editwin = MyEditWin(text)
-    io = IOBinding(editwin)
-    root.mainloop()
+    IOBinding(editwin)
 
 if __name__ == "__main__":
-    test()
+    from idlelib.idle_test.htest import run
+    run(_io_binding)

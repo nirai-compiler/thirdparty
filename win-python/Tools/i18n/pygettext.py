@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 # -*- coding: iso-8859-1 -*-
-# Originally written by Barry Warsaw <barry@zope.com>
+# Originally written by Barry Warsaw <barry@python.org>
 #
 # Minimally patched to make it even more xgettext compatible
 # by Peter Funk <pf@artcom-gmbh.de>
@@ -482,7 +482,7 @@ class TokenEater:
                             '# File: %(filename)s, line: %(lineno)d') % d
                 elif options.locationstyle == options.GNU:
                     # fit as many locations on one line, as long as the
-                    # resulting line length doesn't exceeds 'options.width'
+                    # resulting line length doesn't exceed 'options.width'
                     locline = '#:'
                     for filename, lineno in v:
                         d = {'filename': filename, 'lineno': lineno}

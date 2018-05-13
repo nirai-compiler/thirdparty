@@ -2,390 +2,32 @@
 #
 # For more information about this module, see PEP 324.
 #
-# This module should remain compatible with Python 2.2, see PEP 291.
-#
 # Copyright (c) 2003-2005 by Peter Astrand <astrand@lysator.liu.se>
 #
 # Licensed to PSF under a Contributor Agreement.
 # See http://www.python.org/2.4/license for licensing details.
 
-r"""subprocess - Subprocesses with accessible I/O streams
+r"""Subprocesses with accessible I/O streams
 
 This module allows you to spawn processes, connect to their
-input/output/error pipes, and obtain their return codes.  This module
-intends to replace several other, older modules and functions, like:
-
-os.system
-os.spawn*
-os.popen*
-popen2.*
-commands.*
-
-Information about how the subprocess module can be used to replace these
-modules and functions can be found below.
-
-
-
-Using the subprocess module
-===========================
-This module defines one class called Popen:
-
-class Popen(args, bufsize=0, executable=None,
-            stdin=None, stdout=None, stderr=None,
-            preexec_fn=None, close_fds=False, shell=False,
-            cwd=None, env=None, universal_newlines=False,
-            startupinfo=None, creationflags=0):
-
-
-Arguments are:
-
-args should be a string, or a sequence of program arguments.  The
-program to execute is normally the first item in the args sequence or
-string, but can be explicitly set by using the executable argument.
-
-On UNIX, with shell=False (default): In this case, the Popen class
-uses os.execvp() to execute the child program.  args should normally
-be a sequence.  A string will be treated as a sequence with the string
-as the only item (the program to execute).
-
-On UNIX, with shell=True: If args is a string, it specifies the
-command string to execute through the shell.  If args is a sequence,
-the first item specifies the command string, and any additional items
-will be treated as additional shell arguments.
-
-On Windows: the Popen class uses CreateProcess() to execute the child
-program, which operates on strings.  If args is a sequence, it will be
-converted to a string using the list2cmdline method.  Please note that
-not all MS Windows applications interpret the command line the same
-way: The list2cmdline is designed for applications using the same
-rules as the MS C runtime.
-
-bufsize, if given, has the same meaning as the corresponding argument
-to the built-in open() function: 0 means unbuffered, 1 means line
-buffered, any other positive value means use a buffer of
-(approximately) that size.  A negative bufsize means to use the system
-default, which usually means fully buffered.  The default value for
-bufsize is 0 (unbuffered).
-
-stdin, stdout and stderr specify the executed programs' standard
-input, standard output and standard error file handles, respectively.
-Valid values are PIPE, an existing file descriptor (a positive
-integer), an existing file object, and None.  PIPE indicates that a
-new pipe to the child should be created.  With None, no redirection
-will occur; the child's file handles will be inherited from the
-parent.  Additionally, stderr can be STDOUT, which indicates that the
-stderr data from the applications should be captured into the same
-file handle as for stdout.
-
-If preexec_fn is set to a callable object, this object will be called
-in the child process just before the child is executed.
-
-If close_fds is true, all file descriptors except 0, 1 and 2 will be
-closed before the child process is executed.
-
-if shell is true, the specified command will be executed through the
-shell.
-
-If cwd is not None, the current directory will be changed to cwd
-before the child is executed.
-
-If env is not None, it defines the environment variables for the new
-process.
-
-If universal_newlines is true, the file objects stdout and stderr are
-opened as a text files, but lines may be terminated by any of '\n',
-the Unix end-of-line convention, '\r', the Macintosh convention or
-'\r\n', the Windows convention.  All of these external representations
-are seen as '\n' by the Python program.  Note: This feature is only
-available if Python is built with universal newline support (the
-default).  Also, the newlines attribute of the file objects stdout,
-stdin and stderr are not updated by the communicate() method.
-
-The startupinfo and creationflags, if given, will be passed to the
-underlying CreateProcess() function.  They can specify things such as
-appearance of the main window and priority for the new process.
-(Windows only)
-
-
-This module also defines some shortcut functions:
-
-call(*popenargs, **kwargs):
-    Run command with arguments.  Wait for command to complete, then
-    return the returncode attribute.
-
-    The arguments are the same as for the Popen constructor.  Example:
-
-    retcode = call(["ls", "-l"])
-
-check_call(*popenargs, **kwargs):
-    Run command with arguments.  Wait for command to complete.  If the
-    exit code was zero then return, otherwise raise
-    CalledProcessError.  The CalledProcessError object will have the
-    return code in the returncode attribute.
-
-    The arguments are the same as for the Popen constructor.  Example:
-
-    check_call(["ls", "-l"])
-
-check_output(*popenargs, **kwargs):
-    Run command with arguments and return its output as a byte string.
-
-    If the exit code was non-zero it raises a CalledProcessError.  The
-    CalledProcessError object will have the return code in the returncode
-    attribute and output in the output attribute.
-
-    The arguments are the same as for the Popen constructor.  Example:
-
-    output = check_output(["ls", "-l", "/dev/null"])
-
-
-Exceptions
-----------
-Exceptions raised in the child process, before the new program has
-started to execute, will be re-raised in the parent.  Additionally,
-the exception object will have one extra attribute called
-'child_traceback', which is a string containing traceback information
-from the childs point of view.
-
-The most common exception raised is OSError.  This occurs, for
-example, when trying to execute a non-existent file.  Applications
-should prepare for OSErrors.
-
-A ValueError will be raised if Popen is called with invalid arguments.
-
-check_call() and check_output() will raise CalledProcessError, if the
-called process returns a non-zero return code.
-
-
-Security
---------
-Unlike some other popen functions, this implementation will never call
-/bin/sh implicitly.  This means that all characters, including shell
-metacharacters, can safely be passed to child processes.
-
-
-Popen objects
-=============
-Instances of the Popen class have the following methods:
-
-poll()
-    Check if child process has terminated.  Returns returncode
-    attribute.
-
-wait()
-    Wait for child process to terminate.  Returns returncode attribute.
-
-communicate(input=None)
-    Interact with process: Send data to stdin.  Read data from stdout
-    and stderr, until end-of-file is reached.  Wait for process to
-    terminate.  The optional input argument should be a string to be
-    sent to the child process, or None, if no data should be sent to
-    the child.
-
-    communicate() returns a tuple (stdout, stderr).
-
-    Note: The data read is buffered in memory, so do not use this
-    method if the data size is large or unlimited.
-
-The following attributes are also available:
-
-stdin
-    If the stdin argument is PIPE, this attribute is a file object
-    that provides input to the child process.  Otherwise, it is None.
-
-stdout
-    If the stdout argument is PIPE, this attribute is a file object
-    that provides output from the child process.  Otherwise, it is
-    None.
-
-stderr
-    If the stderr argument is PIPE, this attribute is file object that
-    provides error output from the child process.  Otherwise, it is
-    None.
-
-pid
-    The process ID of the child process.
-
-returncode
-    The child return code.  A None value indicates that the process
-    hasn't terminated yet.  A negative value -N indicates that the
-    child was terminated by signal N (UNIX only).
-
-
-Replacing older functions with the subprocess module
-====================================================
-In this section, "a ==> b" means that b can be used as a replacement
-for a.
-
-Note: All functions in this section fail (more or less) silently if
-the executed program cannot be found; this module raises an OSError
-exception.
-
-In the following examples, we assume that the subprocess module is
-imported with "from subprocess import *".
-
-
-Replacing /bin/sh shell backquote
----------------------------------
-output=`mycmd myarg`
-==>
-output = Popen(["mycmd", "myarg"], stdout=PIPE).communicate()[0]
-
-
-Replacing shell pipe line
--------------------------
-output=`dmesg | grep hda`
-==>
-p1 = Popen(["dmesg"], stdout=PIPE)
-p2 = Popen(["grep", "hda"], stdin=p1.stdout, stdout=PIPE)
-output = p2.communicate()[0]
-
-
-Replacing os.system()
----------------------
-sts = os.system("mycmd" + " myarg")
-==>
-p = Popen("mycmd" + " myarg", shell=True)
-pid, sts = os.waitpid(p.pid, 0)
-
-Note:
-
-* Calling the program through the shell is usually not required.
-
-* It's easier to look at the returncode attribute than the
-  exitstatus.
-
-A more real-world example would look like this:
-
-try:
-    retcode = call("mycmd" + " myarg", shell=True)
-    if retcode < 0:
-        print >>sys.stderr, "Child was terminated by signal", -retcode
-    else:
-        print >>sys.stderr, "Child returned", retcode
-except OSError, e:
-    print >>sys.stderr, "Execution failed:", e
-
-
-Replacing os.spawn*
--------------------
-P_NOWAIT example:
-
-pid = os.spawnlp(os.P_NOWAIT, "/bin/mycmd", "mycmd", "myarg")
-==>
-pid = Popen(["/bin/mycmd", "myarg"]).pid
-
-
-P_WAIT example:
-
-retcode = os.spawnlp(os.P_WAIT, "/bin/mycmd", "mycmd", "myarg")
-==>
-retcode = call(["/bin/mycmd", "myarg"])
-
-
-Vector example:
-
-os.spawnvp(os.P_NOWAIT, path, args)
-==>
-Popen([path] + args[1:])
-
-
-Environment example:
-
-os.spawnlpe(os.P_NOWAIT, "/bin/mycmd", "mycmd", "myarg", env)
-==>
-Popen(["/bin/mycmd", "myarg"], env={"PATH": "/usr/bin"})
-
-
-Replacing os.popen*
--------------------
-pipe = os.popen("cmd", mode='r', bufsize)
-==>
-pipe = Popen("cmd", shell=True, bufsize=bufsize, stdout=PIPE).stdout
-
-pipe = os.popen("cmd", mode='w', bufsize)
-==>
-pipe = Popen("cmd", shell=True, bufsize=bufsize, stdin=PIPE).stdin
-
-
-(child_stdin, child_stdout) = os.popen2("cmd", mode, bufsize)
-==>
-p = Popen("cmd", shell=True, bufsize=bufsize,
-          stdin=PIPE, stdout=PIPE, close_fds=True)
-(child_stdin, child_stdout) = (p.stdin, p.stdout)
-
-
-(child_stdin,
- child_stdout,
- child_stderr) = os.popen3("cmd", mode, bufsize)
-==>
-p = Popen("cmd", shell=True, bufsize=bufsize,
-          stdin=PIPE, stdout=PIPE, stderr=PIPE, close_fds=True)
-(child_stdin,
- child_stdout,
- child_stderr) = (p.stdin, p.stdout, p.stderr)
-
-
-(child_stdin, child_stdout_and_stderr) = os.popen4("cmd", mode,
-                                                   bufsize)
-==>
-p = Popen("cmd", shell=True, bufsize=bufsize,
-          stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
-(child_stdin, child_stdout_and_stderr) = (p.stdin, p.stdout)
-
-On Unix, os.popen2, os.popen3 and os.popen4 also accept a sequence as
-the command to execute, in which case arguments will be passed
-directly to the program without shell intervention.  This usage can be
-replaced as follows:
-
-(child_stdin, child_stdout) = os.popen2(["/bin/ls", "-l"], mode,
-                                        bufsize)
-==>
-p = Popen(["/bin/ls", "-l"], bufsize=bufsize, stdin=PIPE, stdout=PIPE)
-(child_stdin, child_stdout) = (p.stdin, p.stdout)
-
-Return code handling translates as follows:
-
-pipe = os.popen("cmd", 'w')
-...
-rc = pipe.close()
-if rc is not None and rc % 256:
-    print "There were some errors"
-==>
-process = Popen("cmd", 'w', shell=True, stdin=PIPE)
-...
-process.stdin.close()
-if process.wait() != 0:
-    print "There were some errors"
-
-
-Replacing popen2.*
-------------------
-(child_stdout, child_stdin) = popen2.popen2("somestring", bufsize, mode)
-==>
-p = Popen(["somestring"], shell=True, bufsize=bufsize
-          stdin=PIPE, stdout=PIPE, close_fds=True)
-(child_stdout, child_stdin) = (p.stdout, p.stdin)
-
-On Unix, popen2 also accepts a sequence as the command to execute, in
-which case arguments will be passed directly to the program without
-shell intervention.  This usage can be replaced as follows:
-
-(child_stdout, child_stdin) = popen2.popen2(["mycmd", "myarg"], bufsize,
-                                            mode)
-==>
-p = Popen(["mycmd", "myarg"], bufsize=bufsize,
-          stdin=PIPE, stdout=PIPE, close_fds=True)
-(child_stdout, child_stdin) = (p.stdout, p.stdin)
-
-The popen2.Popen3 and popen2.Popen4 basically works as subprocess.Popen,
-except that:
-
-* subprocess.Popen raises an exception if the execution fails
-* the capturestderr argument is replaced with the stderr argument.
-* stdin=PIPE and stdout=PIPE must be specified.
-* popen2 closes all filedescriptors by default, but you have to specify
-  close_fds=True with subprocess.Popen.
+input/output/error pipes, and obtain their return codes.
+
+For a complete description of this module see the Python documentation.
+
+Main API
+========
+call(...): Runs a command, waits for it to complete, then returns
+    the return code.
+check_call(...): Same as call() but raises CalledProcessError()
+    if return code is not 0
+check_output(...): Same as check_call() but returns the contents of
+    stdout instead of a return code
+Popen(...): A class for flexibly executing a command in a new process
+
+Constants
+---------
+PIPE:    Special value that indicates a pipe should be created
+STDOUT:  Special value that indicates that stderr should go to stdout
 """
 
 import sys
@@ -402,8 +44,9 @@ import errno
 class CalledProcessError(Exception):
     """This exception is raised when a process run by check_call() or
     check_output() returns a non-zero exit status.
-    The exit status will be stored in the returncode attribute;
-    check_output() will also store the output in the output attribute.
+
+    Attributes:
+      cmd, returncode, output
     """
     def __init__(self, returncode, cmd, output=None):
         self.returncode = returncode
@@ -500,7 +143,6 @@ def _args_from_interpreter_flags():
         'ignore_environment': 'E',
         'verbose': 'v',
         'bytes_warning': 'b',
-        'hash_randomization': 'R',
         'py3k_warning': '3',
     }
     args = []
@@ -508,6 +150,8 @@ def _args_from_interpreter_flags():
         v = getattr(sys.flags, flag)
         if v > 0:
             args.append('-' + opt * v)
+    if getattr(sys.flags, 'hash_randomization') != 0:
+        args.append('-R')
     for opt in sys.warnoptions:
         args.append('-W' + opt)
     return args
@@ -647,6 +291,42 @@ def list2cmdline(seq):
 
 
 class Popen(object):
+    """ Execute a child program in a new process.
+
+    For a complete description of the arguments see the Python documentation.
+
+    Arguments:
+      args: A string, or a sequence of program arguments.
+
+      bufsize: supplied as the buffering argument to the open() function when
+          creating the stdin/stdout/stderr pipe file objects
+
+      executable: A replacement program to execute.
+
+      stdin, stdout and stderr: These specify the executed programs' standard
+          input, standard output and standard error file handles, respectively.
+
+      preexec_fn: (POSIX only) An object to be called in the child process
+          just before the child is executed.
+
+      close_fds: Controls closing or inheriting of file descriptors.
+
+      shell: If true, the command will be executed through the shell.
+
+      cwd: Sets the current directory before the child is executed.
+
+      env: Defines the environment variables for the new process.
+
+      universal_newlines: If true, use universal line endings for file
+          objects stdin, stdout and stderr.
+
+      startupinfo and creationflags (Windows only)
+
+    Attributes:
+        stdin, stdout, stderr, pid, returncode
+    """
+    _child_created = False  # Set here since __del__ checks it
+
     def __init__(self, args, bufsize=0, executable=None,
                  stdin=None, stdout=None, stderr=None,
                  preexec_fn=None, close_fds=False, shell=False,
@@ -655,7 +335,6 @@ class Popen(object):
         """Create new Popen instance."""
         _cleanup()
 
-        self._child_created = False
         if not isinstance(bufsize, (int, long)):
             raise TypeError("bufsize must be an integer")
 
@@ -700,12 +379,12 @@ class Popen(object):
 
         (p2cread, p2cwrite,
          c2pread, c2pwrite,
-         errread, errwrite) = self._get_handles(stdin, stdout, stderr)
+         errread, errwrite), to_close = self._get_handles(stdin, stdout, stderr)
 
         try:
             self._execute_child(args, executable, preexec_fn, close_fds,
                                 cwd, env, universal_newlines,
-                                startupinfo, creationflags, shell,
+                                startupinfo, creationflags, shell, to_close,
                                 p2cread, p2cwrite,
                                 c2pread, c2pwrite,
                                 errread, errwrite)
@@ -713,18 +392,12 @@ class Popen(object):
             # Preserve original exception in case os.close raises.
             exc_type, exc_value, exc_trace = sys.exc_info()
 
-            to_close = []
-            # Only close the pipes we created.
-            if stdin == PIPE:
-                to_close.extend((p2cread, p2cwrite))
-            if stdout == PIPE:
-                to_close.extend((c2pread, c2pwrite))
-            if stderr == PIPE:
-                to_close.extend((errread, errwrite))
-
             for fd in to_close:
                 try:
-                    os.close(fd)
+                    if mswindows:
+                        fd.Close()
+                    else:
+                        os.close(fd)
                 except EnvironmentError:
                     pass
 
@@ -758,11 +431,11 @@ class Popen(object):
         return data
 
 
-    def __del__(self, _maxint=sys.maxint, _active=_active):
+    def __del__(self, _maxint=sys.maxint):
         # If __init__ hasn't had a chance to execute (e.g. if it
         # was passed an undeclared keyword argument), we don't
         # have a _child_created attribute at all.
-        if not getattr(self, '_child_created', False):
+        if not self._child_created:
             # We didn't get to successfully create a child process.
             return
         # In case the child hasn't been waited on, check if it's done.
@@ -807,6 +480,8 @@ class Popen(object):
 
 
     def poll(self):
+        """Check if child process has terminated. Set and return returncode
+        attribute."""
         return self._internal_poll()
 
 
@@ -818,8 +493,9 @@ class Popen(object):
             """Construct and return tuple with IO objects:
             p2cread, p2cwrite, c2pread, c2pwrite, errread, errwrite
             """
+            to_close = set()
             if stdin is None and stdout is None and stderr is None:
-                return (None, None, None, None, None, None)
+                return (None, None, None, None, None, None), to_close
 
             p2cread, p2cwrite = None, None
             c2pread, c2pwrite = None, None
@@ -837,6 +513,10 @@ class Popen(object):
                 # Assuming file-like object
                 p2cread = msvcrt.get_osfhandle(stdin.fileno())
             p2cread = self._make_inheritable(p2cread)
+            # We just duplicated the handle, it has to be closed at the end
+            to_close.add(p2cread)
+            if stdin == PIPE:
+                to_close.add(p2cwrite)
 
             if stdout is None:
                 c2pwrite = _subprocess.GetStdHandle(_subprocess.STD_OUTPUT_HANDLE)
@@ -850,6 +530,10 @@ class Popen(object):
                 # Assuming file-like object
                 c2pwrite = msvcrt.get_osfhandle(stdout.fileno())
             c2pwrite = self._make_inheritable(c2pwrite)
+            # We just duplicated the handle, it has to be closed at the end
+            to_close.add(c2pwrite)
+            if stdout == PIPE:
+                to_close.add(c2pread)
 
             if stderr is None:
                 errwrite = _subprocess.GetStdHandle(_subprocess.STD_ERROR_HANDLE)
@@ -865,10 +549,14 @@ class Popen(object):
                 # Assuming file-like object
                 errwrite = msvcrt.get_osfhandle(stderr.fileno())
             errwrite = self._make_inheritable(errwrite)
+            # We just duplicated the handle, it has to be closed at the end
+            to_close.add(errwrite)
+            if stderr == PIPE:
+                to_close.add(errread)
 
             return (p2cread, p2cwrite,
                     c2pread, c2pwrite,
-                    errread, errwrite)
+                    errread, errwrite), to_close
 
 
         def _make_inheritable(self, handle):
@@ -897,7 +585,7 @@ class Popen(object):
 
         def _execute_child(self, args, executable, preexec_fn, close_fds,
                            cwd, env, universal_newlines,
-                           startupinfo, creationflags, shell,
+                           startupinfo, creationflags, shell, to_close,
                            p2cread, p2cwrite,
                            c2pread, c2pwrite,
                            errread, errwrite):
@@ -936,6 +624,10 @@ class Popen(object):
                     # kill children.
                     creationflags |= _subprocess.CREATE_NEW_CONSOLE
 
+            def _close_in_parent(fd):
+                fd.Close()
+                to_close.remove(fd)
+
             # Start the process
             try:
                 hp, ht, pid, tid = _subprocess.CreateProcess(executable, args,
@@ -960,11 +652,11 @@ class Popen(object):
                 # pipe will not close when the child process exits and the
                 # ReadFile will hang.
                 if p2cread is not None:
-                    p2cread.Close()
+                    _close_in_parent(p2cread)
                 if c2pwrite is not None:
-                    c2pwrite.Close()
+                    _close_in_parent(c2pwrite)
                 if errwrite is not None:
-                    errwrite.Close()
+                    _close_in_parent(errwrite)
 
             # Retain the process handle, but close the thread handle
             self._child_created = True
@@ -1025,7 +717,15 @@ class Popen(object):
                     try:
                         self.stdin.write(input)
                     except IOError as e:
-                        if e.errno != errno.EPIPE:
+                        if e.errno == errno.EPIPE:
+                            # communicate() should ignore broken pipe error
+                            pass
+                        elif (e.errno == errno.EINVAL
+                              and self.poll() is not None):
+                            # Issue #19612: stdin.write() fails with EINVAL
+                            # if the process already exited before the write
+                            pass
+                        else:
                             raise
                 self.stdin.close()
 
@@ -1090,6 +790,7 @@ class Popen(object):
             """Construct and return tuple with IO objects:
             p2cread, p2cwrite, c2pread, c2pwrite, errread, errwrite
             """
+            to_close = set()
             p2cread, p2cwrite = None, None
             c2pread, c2pwrite = None, None
             errread, errwrite = None, None
@@ -1098,6 +799,7 @@ class Popen(object):
                 pass
             elif stdin == PIPE:
                 p2cread, p2cwrite = self.pipe_cloexec()
+                to_close.update((p2cread, p2cwrite))
             elif isinstance(stdin, int):
                 p2cread = stdin
             else:
@@ -1108,6 +810,7 @@ class Popen(object):
                 pass
             elif stdout == PIPE:
                 c2pread, c2pwrite = self.pipe_cloexec()
+                to_close.update((c2pread, c2pwrite))
             elif isinstance(stdout, int):
                 c2pwrite = stdout
             else:
@@ -1118,8 +821,12 @@ class Popen(object):
                 pass
             elif stderr == PIPE:
                 errread, errwrite = self.pipe_cloexec()
+                to_close.update((errread, errwrite))
             elif stderr == STDOUT:
-                errwrite = c2pwrite
+                if c2pwrite is not None:
+                    errwrite = c2pwrite
+                else: # child's stdout is not set, use parent's stdout
+                    errwrite = sys.__stdout__.fileno()
             elif isinstance(stderr, int):
                 errwrite = stderr
             else:
@@ -1128,7 +835,7 @@ class Popen(object):
 
             return (p2cread, p2cwrite,
                     c2pread, c2pwrite,
-                    errread, errwrite)
+                    errread, errwrite), to_close
 
 
         def _set_cloexec_flag(self, fd, cloexec=True):
@@ -1172,7 +879,7 @@ class Popen(object):
 
         def _execute_child(self, args, executable, preexec_fn, close_fds,
                            cwd, env, universal_newlines,
-                           startupinfo, creationflags, shell,
+                           startupinfo, creationflags, shell, to_close,
                            p2cread, p2cwrite,
                            c2pread, c2pwrite,
                            errread, errwrite):
@@ -1190,6 +897,10 @@ class Popen(object):
 
             if executable is None:
                 executable = args[0]
+
+            def _close_in_parent(fd):
+                os.close(fd)
+                to_close.remove(fd)
 
             # For transferring possible exec failure from child to parent
             # The first char specifies the exception type: 0 means
@@ -1249,15 +960,16 @@ class Popen(object):
                                     os.close(fd)
                                     closed.add(fd)
 
-                            # Close all other fds, if asked for
-                            if close_fds:
-                                self._close_fds(but=errpipe_write)
-
                             if cwd is not None:
                                 os.chdir(cwd)
 
                             if preexec_fn:
                                 preexec_fn()
+
+                            # Close all other fds, if asked for - after
+                            # preexec_fn(), which may open FDs.
+                            if close_fds:
+                                self._close_fds(but=errpipe_write)
 
                             if env is None:
                                 os.execvp(executable, args)
@@ -1284,17 +996,21 @@ class Popen(object):
                     # be sure the FD is closed no matter what
                     os.close(errpipe_write)
 
-                if p2cread is not None and p2cwrite is not None:
-                    os.close(p2cread)
-                if c2pwrite is not None and c2pread is not None:
-                    os.close(c2pwrite)
-                if errwrite is not None and errread is not None:
-                    os.close(errwrite)
-
                 # Wait for exec to fail or succeed; possibly raising exception
-                # Exception limited to 1M
                 data = _eintr_retry_call(os.read, errpipe_read, 1048576)
+                pickle_bits = []
+                while data:
+                    pickle_bits.append(data)
+                    data = _eintr_retry_call(os.read, errpipe_read, 1048576)
+                data = "".join(pickle_bits)
             finally:
+                if p2cread is not None and p2cwrite is not None:
+                    _close_in_parent(p2cread)
+                if c2pwrite is not None and c2pread is not None:
+                    _close_in_parent(c2pwrite)
+                if errwrite is not None and errread is not None:
+                    _close_in_parent(errwrite)
+
                 # be sure the FD is closed no matter what
                 os.close(errpipe_read)
 
@@ -1312,7 +1028,7 @@ class Popen(object):
                 _WTERMSIG=os.WTERMSIG, _WIFEXITED=os.WIFEXITED,
                 _WEXITSTATUS=os.WEXITSTATUS):
             # This method is called (indirectly) by __del__, so it cannot
-            # refer to anything outside of its local scope."""
+            # refer to anything outside of its local scope.
             if _WIFSIGNALED(sts):
                 self.returncode = -_WTERMSIG(sts)
             elif _WIFEXITED(sts):

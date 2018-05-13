@@ -155,9 +155,8 @@ def isfunction(object):
 def isgeneratorfunction(object):
     """Return true if the object is a user-defined generator function.
 
-    Generator function objects provides same attributes as functions.
-
-    See help(isfunction) for attributes listing."""
+    Generator function objects provide the same attributes as functions.
+    See help(isfunction) for a list of attributes."""
     return bool((isfunction(object) or ismethod(object)) and
                 object.func_code.co_flags & CO_GENERATOR)
 
@@ -165,7 +164,7 @@ def isgenerator(object):
     """Return true if the object is a generator.
 
     Generator objects provide these attributes:
-        __iter__        defined to support interation over container
+        __iter__        defined to support iteration over container
         close           raises a new GeneratorExit exception inside the
                         generator to terminate the iteration
         gi_code         code object
@@ -728,7 +727,8 @@ def getclasstree(classes, unique=0):
             for parent in c.__bases__:
                 if not parent in children:
                     children[parent] = []
-                children[parent].append(c)
+                if c not in children[parent]:
+                    children[parent].append(c)
                 if unique and parent in classes: break
         elif c not in roots:
             roots.append(c)
@@ -968,8 +968,13 @@ def getcallargs(func, *positional, **named):
         assign(varkw, named)
     elif named:
         unexpected = next(iter(named))
-        if isinstance(unexpected, unicode):
-            unexpected = unexpected.encode(sys.getdefaultencoding(), 'replace')
+        try:
+            unicode
+        except NameError:
+            pass
+        else:
+            if isinstance(unexpected, unicode):
+                unexpected = unexpected.encode(sys.getdefaultencoding(), 'replace')
         raise TypeError("%s() got an unexpected keyword argument '%s'" %
                         (f_name, unexpected))
     unassigned = num_args - len([arg for arg in args if is_assigned(arg)])

@@ -1,0 +1,18 @@
+Sun, 23 Apr 2017 10:22:56 +0200
+
+This is HarfBuzz 1.4.5, downloaded from:
+https://www.freedesktop.org/software/harfbuzz/release/harfbuzz-1.4.5.tar.bz2
+
+Replaced strtof -> strtod in src/hb-common.cc
+
+In the VS2015 Developer Command Prompt, ran this command in the win32 dir:
+
+    nmake /f Makefile.vc CFG=release FREETYPE=1 PREFIX=C:\Users\rdb\panda3d\thirdparty\win-libs-vc14\freetype
+
+The link will fail because of missing _inflate symbol.  That's OK, we're not interested in the shared library.
+
+Then, making a static library:
+
+    link /lib /ltcg /machine:x86 /out:harfbuzz.lib release\Win32\harfbuzz\hb-blob.obj release\Win32\harfbuzz\hb-buffer.obj release\Win32\harfbuzz\hb-buffer-serialize.obj release\Win32\harfbuzz\hb-common.obj release\Win32\harfbuzz\hb-face.obj release\Win32\harfbuzz\hb-fallback-shape.obj release\Win32\harfbuzz\hb-font.obj release\Win32\harfbuzz\hb-ot-font.obj release\Win32\harfbuzz\hb-ot-layout.obj release\Win32\harfbuzz\hb-ot-map.obj release\Win32\harfbuzz\hb-ot-math.obj release\Win32\harfbuzz\hb-ot-shape.obj release\Win32\harfbuzz\hb-ot-shape-complex-arabic.obj release\Win32\harfbuzz\hb-ot-shape-complex-default.obj release\Win32\harfbuzz\hb-ot-shape-complex-hangul.obj release\Win32\harfbuzz\hb-ot-shape-complex-hebrew.obj release\Win32\harfbuzz\hb-ot-shape-complex-indic.obj release\Win32\harfbuzz\hb-ot-shape-complex-indic-table.obj release\Win32\harfbuzz\hb-ot-shape-complex-myanmar.obj release\Win32\harfbuzz\hb-ot-shape-complex-thai.obj release\Win32\harfbuzz\hb-ot-shape-complex-tibetan.obj release\Win32\harfbuzz\hb-ot-shape-complex-use.obj release\Win32\harfbuzz\hb-ot-shape-complex-use-table.obj release\Win32\harfbuzz\hb-ot-shape-fallback.obj release\Win32\harfbuzz\hb-ot-shape-normalize.obj release\Win32\harfbuzz\hb-ot-tag.obj release\Win32\harfbuzz\hb-ot-var.obj release\Win32\harfbuzz\hb-set.obj release\Win32\harfbuzz\hb-shape.obj release\Win32\harfbuzz\hb-shape-plan.obj release\Win32\harfbuzz\hb-shaper.obj release\Win32\harfbuzz\hb-ucdn.obj release\Win32\harfbuzz\hb-unicode.obj release\Win32\harfbuzz\hb-warning.obj release\Win32\harfbuzz\ucdn.obj release\Win32\harfbuzz\hb-ft.obj
+
+~rdb
