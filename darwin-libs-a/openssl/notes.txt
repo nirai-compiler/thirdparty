@@ -1,0 +1,5 @@
+Sun 15 Nov 2015 13:14:33 EST
+
+Newer Mac releases don't have OpenSSL.  I copied this from a Snow Leopard install.
+
+~rdb

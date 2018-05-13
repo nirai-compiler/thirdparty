@@ -1,0 +1,16 @@
+Sat Apr 11 06:41:38 EDT 2015
+
+This is Bullet 2.82 r2704, downloaded from:
+https://bullet.googlecode.com/files/bullet-2.82-r2704.tgz
+
+Set the following CMake settings:
+BUILD_*_DEMOS=OFF
+BUILD_DEMOS=OFF
+BUILD_EXTRAS=OFF
+CMAKE_OSX_ARCHITECTURES=i386;x86_64
+CMAKE_OSX_DEPLOYMENT_TARGET=10.6
+CMAKE_OSX_SYSROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk
+
+License is permissive (ZLib license).
+
+~rdb

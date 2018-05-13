@@ -1,0 +1,9 @@
+Sat 21 Nov 2015 14:28:12 CET
+
+This is FMod Ex 4.44.59, downloaded from:
+http://www.fmod.org/download/fmodex/api/Mac/fmodapi44459mac-installer.dmg
+
+FMod is free for non-commercial use, but requires additional credit.
+See LICENSE.TXT for the details.
+
+~rdb

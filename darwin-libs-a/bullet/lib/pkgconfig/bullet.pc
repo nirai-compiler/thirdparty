@@ -1,6 +1,6 @@
 Name: bullet
 Description: Bullet Continuous Collision Detection and Physics Library
 Requires:
-Version: 2.80
+Version: 2.82
 Libs: -L/usr/local/lib -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
 Cflags:  -I/usr/local/include/bullet

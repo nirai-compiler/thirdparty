@@ -1,42 +1,1255 @@
 
 ===============================================================================
                            REVISION HISTORY : FMOD Ex
-             Copyright (c) Firelight Technologies, Pty, Ltd, 2004-2011
+             Copyright (c) Firelight Technologies, Pty, Ltd, 2004-2015
                               http://www.fmod.org
 ===============================================================================
-              + Added feature or noticable improvement
+              + Added feature or noticeable improvement
               - Bug fix or something removed
               * Changed or Information
               ! Important - Take note!
 ===============================================================================
 
-17/11/11 4.34.15 - Stable branch update
+12/11/15 4.44.59 - Stable branch update (build 69790)
+----------------------------------------------------
+
+- Mac - Fixed issue preventing FMOD Ex dylib from being accepted into the App
+        Store due to missing LC_VERSION_MIN_MACOSX. We now build with a modern
+        toolchain which causes the deprecation of PPC support.
+-       Fix crash with invalid .mp3 files.
+-       Fixed stereo sounds playing in 3D in quad/surround speaker modes, not being 
+        audible when behind the listener.
+
+* iOS - Now built with SDK 9.1 (Xcode 7.1).
+* Mac - Now built with SDK 10.11 (Xcode 7.1).
+* Android - Now built with NDK r10e.
+* PS Vita - Now built with SDK 3.550.
+
+20/10/15 4.44.58 - Stable branch update (build 69027)
+----------------------------------------------------
+
+- Fix FMOD_DSP_TYPE_PITCHSHIFTER setParameter crash.
+- WinStore - Fix crashes that can occur on startup or shutdown.
+- WinStore - Fix occasional crashes on Windows 10.
+- FSBankEx - Increased max PCM encoder channels from 15 to 16.
+
+- Event API - Fix rare error releasing a streamed bank.
+
+* PS4 - Now built with SDK 3.008.041
+* PS3 - Now built with SDK 475.001.
+
+
+21/09/15 4.44.57 - Stable branch update (build 68140)
+----------------------------------------------------
+- iOS - Fixed error creating the file thread on iOS 9.0.
+
+- Event API - Increase sound bank entry limit for large projects (was returning
+  FMOD_ERR_INTERNAL)
+- Event API - Fix hang if running out of event queue loading slots.   Bug 
+  introduced in 4.44.50.
+
+* Xbox One - Now built with August 2015 XDK.
+* iOS - Now built with SDK 9.0 (Xcode 7.0).
+
+05/08/15 4.44.56 - Stable branch update (build 66571)
+----------------------------------------------------
+
+- Win - Fix audio pops on initialisation when using WASAPI output.
+- Fix tag UTF8 strings not being null terminated properly leading to string 
+  overflows.
+
+- Event API - Fix potential crash if using random sound defs with 'dont play' 
+  entries.
+
+07/07/15 4.44.55 - Stable branch update (build 65561)
+----------------------------------------------------
+
++ 3DS - Added support for microphone recording.
+
+- Fixed MIDI playback not correctly handling CC1 (mod wheel).
+- De-clicked echo when changing delay length.
+
+- PS Vita - Fixed rare hardware channel leak when performing Channel::setPosition
+            for a stream opened as FMOD_NONBLOCKING.
+
+* Xbox One - Now built with May 2015 QFE 1 XDK.
+* WiiU - Now built with SDK 2.12.13.
+* 3DS - Now built with SDK 11.1.1.
+
+25/05/15 4.44.54 - Stable branch update
+----------------------------------------------------
+
+- Fixed invalid memory access when loading an incorrectly formatted or truncated 
+  IMA ADPCM wav file using FMOD_OPENMEMORY_POINT and FMOD_CREATECOMPRESSEDSAMPLE.
+
+- PS Vita - Fixed potential crackling when the game is under load.
+
+* Xbox One - Now built with April 2015 XDK.
+
+07/05/15 4.44.53 - Stable branch update
+----------------------------------------------------
+
+- Event API - fix Event::setMute not unmuting if muted before playback.
+- PS4 - Fix issues in AT9 compressed channels with non start to end loop points.
+- Linux - Fixed potential hang when releasing a starving net-stream.
+
+* PS Vita - Maximum hardware channels is now 64 instead of 32.
+
+1/04/15 4.44.52 - Stable branch update
+----------------------------------------------------
+
+- Fixed DSP effects being fed a single mix of the wrong channel count when sounds
+  come to a natural end. Depending on the DSP, this can sound like a pop.
+
+- Xbox One - Fixed rare hang when decoding small XMA compressed audio.
+
+- Event API - Fix FMOD_EVENT_CALLBACKTYPE_SOUNDDEF_END not triggering on one-shot
+  sounds.
+  
+- C# - Fix ADVANCEDSETTINGS and DSP_DESCRIPTION structs.
+  
+* Increased maximum 3d listeners to 6.
+* PS3 - Now built with SDK 470.001.
+
+16/03/15 4.44.51 - Stable branch update
+----------------------------------------------------
+
++ Xbox One - Added access to 7th CPU core.
+
+- Fix crash with playDSP and Channel::stop when used with a 3d Reverb sphere.
+  Issue was introduced in 4.44.49
+- Fix rare crash with Sound::release if a nonblocking setPosition is in 
+  process and it is an FSB sound.
+- Xbox One - Fix XMA compressed channels not respecting setDelay calls.
+
+* Xbox One - Now built with February 2015 XDK.
+
+13/01/15 4.44.50 - Stable branch update
+----------------------------------------------------
+
++ PS4 - Allow System::setSpeakerMode(FMOD_SPEAKERMODE_STEREO) to be called to
+        mix and output in stereo.
+
+- Fix incorrect panning when 3D speaker spread is set. Introduced in 4.44.47.
+- Fix Sound::release or System::close possibly rarely returning 
+  FMOD_ERR_DSP_NOTFOUND
+
+- Event API - Fix preloaded FSB code from falling over on malformed path 
+  strings.
+- Event API - Fix rare streaming soundbank crash when creating/destroying 
+  from different threads.
+
+12/12/14 4.44.49 - Stable branch update
+----------------------------------------------------
+
+!- Fix very rare mixer crash when using reverb.
+- Fix memory leak with CELT streams.
+
+!- Event API - fix rare crash when loading and releasing streamed banks with 
+              FMOD_EVENT_NONBLOCKING
+
+* Xbox One - Added check to ensure DSP buffer size is specified as the default
+             512 samples to avoid performance degradation of XMA decoding.
+
+28/11/14 4.44.48 - Stable branch update
+----------------------------------------------------
+
+- Fix reverb dry mix not contributing to audibility in emulated mode, so if 
+  reverb dry mix was used voices could be virtual or real incorrectly.
+
+* PS Vita - Now built with SDK 3.300.
+* WiiU - Now built with SDK 2.11.13.
+
+13/11/14 4.44.47 - Stable branch update
+----------------------------------------------------
+- Fixed uninitialised mix matrix values being used.
+
+- Android - Fixed crashes due to insufficient stack size when running ART
+            instead of Dalvik.
+
+* Xbox One - Now built with November 2014 XDK.
+* Android - Now built with NDK r10c.
+* iOS - Now built with SDK 8.1 (Xcode 6.1).
+* PS4 - Now built with SDK 2.000.071
+
+16/10/14 4.44.46 - Stable branch update
+----------------------------------------------------
+- Fixed rare hang during Sound::release for sounds created as FMOD_NONBLOCKING.
+- Event API - Fixed rare crash when streaming bank instance is unloaded while the 
+  same bank is loading in the FMOD_NONBLOCKING thread.
+- Event API - Fixed rare crash if bank files returned FMOD_ERR_FILE_NOTFOUND 
+  during FMOD_EVENT_NONBLOCKING background loading, and freeEventData was called 
+  at the same time.
+
+08/10/14 4.44.45 - Stable branch update
+----------------------------------------------------
+
+- PS4 - "music" channel group will be paused or muted when system background 
+        music is playing.
+
+29/09/14 4.44.44 - Stable branch update
+----------------------------------------------------
+
+* Xbox One - Now built with September 2014 QFE 1 XDK.
+
+18/09/14 4.44.43 - Stable branch update
+----------------------------------------------------
+
+- Allow the Designer generated project header file to be included into multiple
+  CPP files.
+  
+* iOS - Now built with SDK 8.0 (Xcode 6.0).
+
+10/09/14 4.44.42 - Stable branch update
+----------------------------------------------------
+
+!- Fix rare crash when calling Channel::setPosition on a non blocking stream 
+   and calling Channel::stop at the right time.
+!- Event API - Fix Event::getInfo from stopping streams from triggering, and 
+   causing possible CPU stalls, after introduction of new length calculation 
+   based on language setting.  Bug introduced in 4.44.35
+   
+- Fixed incorrect handling of speaker mask which could cause certain channels
+  to be ignored such as side left and side right in an 8 channel wav file.
+
+- Linux - Fixed incorrect panning for 7.1 when using PulseAudio output mode.
+- Linux - Fixed potential audio corruption when playing 7.1.
+- PS4 - Mixer will now always run in 7.1 speaker mode.
+- Win - Fixed a crash in Param EQ caused by a compiler bug for customers who
+        compile 64bit static libraries in Visual Studio 2010.
+
+15/08/14 4.44.41 - Stable branch update
+----------------------------------------------------
+
+- Xbox One - WASAPI will now force 7.1 output instead of producing an error when
+             selected speaker mode doesn't match.
+- Event API - Fix rapid music crossfades not overriding slower crossfades correctly
+
+* PS4 - Now build with SDK 1.750.061
+* Xbox One - Now built with July 2014 QFE1 XDK.
+
+01/08/14 4.44.40 - Stable branch update
+----------------------------------------------------
+
++ 64bit Vorbis encoder DLL for Windows is now included for use with 64bit fsbanklib.
+
+- Fix channel stealing not calling end callback in playDSP case.
+- Fix rare crash if System::playDSP is called, and it steals a channel with a sound 
+  on it, and System::update wasnt called in between.
+- Fix rare crash when releasing a playing sound, usually when from an FSB.
+- Xbox One - Fixed ACP race condition when shutting down / initializing System
+             causing XMA channels to not play.
+- Xbox One - Fixed audio corruption when playing mono streams from an XMA FSB
+             that has both mono and stereo subsounds.
+- Fix audio glitches caused by numerical instability in Highpass filter when performing
+  large changes in cutoff frequency.
+- PS3 - Removed Visual Studio 2008 example project files.
+
+* Xbox One - Now built with July 2014 XDK.
+* iOS - Now built with SDK 7.1.
+* PS3 - Now built with SDK 460.001
+
+08/07/14 4.44.39 - Stable branch update
+----------------------------------------------------
+
+- Windows - Fixed WASAPI failing to initialize on certain old drivers.
+- PS4 - Fixed unnecessary file reads when playing an AT9 stream.
+- PS4 - Minor performance improvements in AT9 decoding using new SDK
+        1.700 features.
+
+27/06/14 4.44.38 - Stable branch update
+----------------------------------------------------
+
+- Fix stereo sounds not sending to LFE when 2D.
+- Fix stereo sounds set as 'all mono' not respecting 'channel mix'
+  when played in 3D.
+
+23/06/14 4.44.37 - Stable branch update
+----------------------------------------------------
++ Added Sound::getSubSoundParent
++ PS4 - Added support for multi-channel AT9 streams. Banks must be rebuilt.
+
+- Event API - Fix new length calculation based on language only working for 
+  complex events.  Added to simple events.
+
+13/06/14 4.44.36 - Stable branch update
+----------------------------------------------------
+
++ Optimize Event::setReverbProperties to be negligible CPU overhead rather than 
+  consuming significant CPU.
+
+- Fix speakers possibly dropping out on output stage, when pausing a channel 
+  then unpausing it in a multichannel setup. Bug introduced in 06/01/14 
+  4.44.28
+- Fix truncated FSB causing zero length subsounds, now returns 
+  FMOD_ERR_FILE_BAD
+- Fix streams opened with FMOD_NONBLOCKING from playing at the incorrect 
+  position if they go virtual shortly after setPosition is called.
+- fix EOF detection in file system causing rare extra file read past  end of 
+  file.
+
+- Event API - Fixed occasional crash when using 
+              FMOD_EVENTPROPERTY_EFFECTS_AFFECT_REVERB on simple events.
+
++ PS4 and PS Vita - Added support for ATRAC9 in 64bit FSBankLibEx. It uses the
+                    file naming convention of ATRAC9 DLL 2.6.0.0 and later.
+
+* Xbox One - Now built with June 2014 XDK.
+
+28/05/14 4.44.35 - Stable branch update
+----------------------------------------------------
+
++ Linux - Added support for FSB Vorbis.
+
+- Xbox One - Small improvement to XMA performance.
+
+* Change Event::getInfo to probe actual loaded wavebank for lengthms 
+  (if it is loaded), so that EventSystem::setLanguage will make it return the 
+  right length and not just the originally stored length in the FEV.
+* PS Vita - Now built with SDK 3.150.021.
+
+14/05/14 4.44.34 - Stable branch update
+----------------------------------------------------
+- Fix 3D panning of subsound sentencing using samples.
+- fix System::getDriverInfoW returning garbage if output mode didnt support wide 
+  char.  FMOD_OUTPUTTYPE_NOSOUND was one of these.
+- Fix System::setFileSystem asyncread callback not setting priority values properly.
+- Add FMOD_INIT_ASYNCREAD_FAST and FMOD_ASYNCREADINFO::done method, to improve
+  performance of asyncread callback significantly.  Instead of setting 'result',
+  call 'done' function pointer instead.
+  
+* PS4 - Now built with SDK 1.700.
+* Android - Now built with NDK r9d.
+
+28/04/14 4.44.33 - Stable branch update
+----------------------------------------------------
+- Fixed occasional crash when setting FMOD_EVENTPROPERTY_EFFECTS_AFFECT_REVERB true
+  or using FMOD_REVERB_CHANNELPROPERTIES::ConnectionPoint.
+- Fixed crash if using remote tweaking for event envelopes on ARM devices.
+
+- Xbox One - Fixed rare mixer hang when playing XMA as a compressed sample.
+- WiiU - Fixed DRC audio playing in the left speaker only when running FMOD
+         as FMOD_SPEAKERMODE_MONO.
+
+- Event API - fix getEvent returning FMOD_ERR_INVALID_PARAM in some cases 
+              instead of FMOD_ERR_EVENT_NOTFOUND
+
+* Xbox One - Now built with March 2014 QFE1 XDK.
+* WiiU - Now built with SDK 2.10.04.
+* Windows Phone - Now built for Windows Phone 8.0 and 8.1.
+
+19/03/14 4.44.32 - Stable branch update
+----------------------------------------------------
++ Optimize 3d panning algorithm if 3d sound is stereo or above, or if the channel
+  has a 3d speaker spread, or if the 3d pan level is less than 1.0f
+
++ Xbox 360 - Added FMOD_360_OverrideBackgroundMusic() and FMOD_360_RestoreBackgroundMusic()
+			 to allow correct behaviour in disabling the users background music. 
+
+- Android - Fixed crash on low quality Vorbis encoded FSBs.
+- Android - Fixed one time memory leak on System::release when using OpenSL
+            output mode.
+			 
+* PS4 - Now built with SDK 1.600.071
+
+10/02/14 4.44.31 - Stable branch update
+----------------------------------------------------
+* The speaker level effect now mutes the side speakers if sides are not visible.  
+  Side levels are removed from effect as default, returning visibility for those 
+  speakers as to they way it was before 4.44.27 change.
+!* System::getOutputHandle now returns FMOD_ERR_UNSUPPORTED if the output device
+   doesn't support exposing it's handle.
+   
+- iOS - Fixed error being returned during shuts down if the Audio Session has been 
+        externally stopped.
+   
+* Xbox One - Now built with August QFE11 XDK.
+
+20/01/14 4.44.30 - Stable branch update
+----------------------------------------------------
+
++ Added new FMOD::System callback FMOD_SYSTEM_CALLBACKTYPE_THREADDESTROYED.
+
++ PS4 - Added support for audio input devices. See "Getting Started with 
+        FMOD for Orbis" for more details.
+
+- Fixed Channel::getPosition returing incorrect value for streams with very 
+  short loops.
+
+- PS4 - Fixed rare internal error in AT9 codec when channels are
+        reused after stopping.
+- PS4 - Fixed issues with calling ChannelControl::setPosition on AT9
+        streams and compressed samples.
+
+
+10/01/14 4.44.29 - Stable branch update
+----------------------------------------------------
+
+- Fix FMOD_INIT_REVERB_PREALLOCBUFFERS ignoring 3d reverb spheres.  Previously
+  this only worked with System::setReverbProperties.
+- Fix rare crash if using ITEcho DSP effect.
+  
+* Windows Store Apps - Libraries are now included for both 8.0 and 8.1 applications.
+
+06/01/14 4.44.28 - Stable branch update
+----------------------------------------------------
+
++ Optimize Sound::getNumSyncPoints when using large FSB files with many subsounds
+  and many syncpoints.
+
++ PS3/PS4 - Add FMOD_INIT_7POINT1_DOLBYMAPPING flag.  FMOD uses the Microsoft
+            WAVEFORMATEXTENSIBLE speaker mapping for 7.1, which has the surrounds 
+            and backs swapped around compared to the standard dolby/thx/dts mapping.
+            Use this flag to keep authoring in FMOD's WAVEFORMATEXTENSIBLE mapping
+            and have it come out in the right speakers for PS3/PS4.
+
+- Xbox One - Fixed potential hang if using a custom memory pool.
+
+- Fix dsp callbacks on channels passing speaker channel count for the last mix,
+  instead of the sound's channel count, if a sound finished naturally.
+- Fixed potential crash with MP3 netstreams.
+- fix mono to 5.1 speaker mode pan adding backleft level twice instead of 
+  backleft+sideleft
+
+- PS Vita - Fixed potential sound corruption when seeking a VAG or HE-VAG stream.
+
+* Change side left/side right contributions from contributing to the fronts and backs 
+  in a 7.1 to 5.1 downmix, and making it only contribute to the backs.  This makes the
+  downmix consistent if a 7.1 'side' level was used and downmixed to a dolby/thx/dts
+  mapping, ie like when using FMOD_INIT_7POINT1_DOLBYMAPPING flag.
+
+26/11/13 4.44.27 - Stable branch update
+----------------------------------------------------
+
+- Fixed potential crash when releasing a sound with a subsound sentence.
+
+- Xbox One - Fixed rare XMA codec hang which could also manifest as
+             FMOD_ERR_INTERNAL.
+- iOS - Added retry logic to internally handle certain native API fails while
+        backgrounding the application.
+		
+* PS4 - Now built with SDK 1.500.111
+
+13/11/13 4.44.26 - Stable branch update
+----------------------------------------------------
+
+- 3DS - Fixed potential burst of static at System::init time.
+- iOS - Fixed streams returning FMOD_ERR_INTERNAL on ARM64 devices.
+- iOS - Fixed automatic interruption handling not working for ARM64 devices.
+- PS3 - Fixed mixer crash on SPU when a non-codec leaf node has more than one
+        output.
+- Windows Store Apps - removed stuttering due to thread starvation
+- Windows Phone - removed stuttering due to thread starvation
+
+* Windows Store Apps - Now built for Windows 8.1
+* PS Vita - Now built with SDK 3.000.061.
+* Wii U - Now built with SDK 2.09.22.
+
+05/11/13 4.44.25 - Stable branch update
+----------------------------------------------------
+
++ iOS - Added support for ARM64 devices and x86_64 simulator. 
+
+- Fixed net streaming truncating or repeatings parts of the end of a netstream.
+
+* PS3 - Now build with SDK 4.5.0
+
+28/10/13 4.44.24 - Stable branch update
+----------------------------------------------------
+
+- Fix channel restarting if 1. sound ended, 2. Channel::setVolume(0) with 
+  FMOD_VOL0BECOMESVIRTUAL happened, 3. setVolume(>0) happened, in between 2 
+  system updates.
+  
+- Windows Store Applications - Fixed rare issue with mixer not updating.
+
+14/10/13 4.44.23 - Stable branch update
+----------------------------------------------------
+
++ Added FMOD_EVENT_CALLBACKTYPE_MAXSTREAMS.  This is triggered if a getEvent
+  causes 'max streams' wavebank setting to be exceeded, which means the event
+  would be delayed until a stream slot was free.
+
++ PS4 - Added example showing routing of audio to controller speakers.
+
+- Fix Sound::getUserData not returning the value set in FMOD_CREATESOUNDEXINFO
+  if a nonblockcallback was set, and calling it from that callback.
+
+* System::get3DSpeakerPosition now returns false for 'active' if speaker is 
+  not part of current speaker mode.
+
+07/10/13 4.44.22 - Stable branch update
+----------------------------------------------------
+
++ PS4 - Added support for FMOD Event Net remote tweaking.
+
+- fix FMOD_OPENSTATE_SEEKING causing some innocent sound functions (like setUserData) 
+  returning FMOD_ERR_NOTREADY
+
+* iOS - Now built with SDK 7.0.
+
+24/09/13 4.44.21 - Stable branch update
+----------------------------------------------------
+
+- Android - Fixed incorrect panning and sound distortion on x86 devices.
+- Xbox One - Fixed 'clicking' when a realtime decoded XMA sample loops if
+             adjusting pitch during playback.
+- PS4 - Fixed AT9 channels stopping when pitched up
+* PS4 - Mixer now runs on blocks of 256 samples
+			 
++ Android - Added support for Vorbis compressed FSB files.
+
+* PS4 - Now build with SDK 1.020.041
+
+26/08/13 4.44.20 - Stable branch update
+----------------------------------------------------
+
+- Fix mono and stereo sounds not being audible if side left/right speaker 
+  levels were being set on it.
+
+- Xbox One - Fixed rare crash on System::init when using WASAPI.
+- Xbox One - Internal WASAPI (mmdevapi.dll) threads will now have their affinity
+             set to match the FMOD feeder thread.
+
+* Xbox One - Now built with August XDK.
+
+12/08/13 4.44.19 - Stable branch update
+----------------------------------------------------
+
+- Fix System::playDSP stalling the main thread when it is called.
+
+- Xbox One - Fixed FMOD_CREATECOMPRESSEDSAMPLE XMA playback issues.
+- Xbox One - Fixed initialization of XAUDIO output mode.
+- Xbox One - Fixed race condition that causes a hang when playing compressed
+             XMA samples and streams at the same time.
+- Xbox One - Fixed leak of SHAPE contexts that would cause createSound to
+             fail if playing and releasing lots of XMA streams.
+- Fix FSB Vorbis seek table containing an invalid entry at the end.
+
+* Releasing a subsound from a streamed FSB now returns FMOD_ERR_SUBSOUND_CANTMOVE.
+
+23/07/13 4.44.18 - Stable branch update
+----------------------------------------------------
+
++ Added 64bit fsbanklibex
+
+- Fix "Sample Rate Change" tag from passing through 0 rate when EOF was hit 
+  on certain MP3 files.
+
+- Linux - Fixed crash on playback of certain CELT streams.
+- Xbox One - Fixed potential hangs with compressed XMA samples.
+- Xbox One - Fixed potential silence if XMA sample rate was not one of 24K, 32K,
+             44.1K or 48K.
+- Xbox One - Fixed hang for short (2KB) XMA files.
+- Xbox One - Fixed incorrect seek offset for XMA files.
+- Win64 - Fixed potential crash on load of Vorbis encoded FSB.
+
+- Event API - fix possible rare deadlock if using FMOD_EVENT_NONBLOCKING flag.
+
+* PS Vita - Now built with SDK 2.500.071.
+* PS4 - Now built with SDK 1.000
+
+09/07/13 4.44.17 - Stable branch update
+----------------------------------------------------
+
++ XboxOne - Officially added support for XMA. Please note this requires the July
+            XDK to avoid a hang.
+
+- Fix Sound userdata being overwritten when FMOD_SOUND_NONBLOCKCALLBACK was 
+  called for a 2nd or more time.
+- Extra error checking in .ogg streamer to be more robust against bad data.
+
+* XboxOne - Now built with July XDK.
+
+25/06/13 4.44.16 - Stable branch update
+----------------------------------------------------
+
++ Win64 - Add FMOD_OUTPUTTYPE_ASIO support.
++ PS4 - Added AT9 support
+
+* Android - Now built with NDK r8e.
+
+11/06/13 4.44.15 - Stable branch update
+----------------------------------------------------
+
++ Android - Added support for mono and 5.1 output via the AudioTrack output
+            mode. 5.1 output requires API16 and compatible hardware.
++ PS4 - Improved performance with SIMD mixing and resampling.
+            
+- Windows Store Apps - Fixed profiler not properly connecting
+- Windows Phone 8 - Fixed profiler not properly connecting
+- iOS - Fixed some incorrect geometry occlusion calculations when running on
+        newer devices.
+        
+* PS Vita - Now built with SDK 2.100.111.
+* PS4 - Now built with SDK 0.990.020.
+* Xbox 360 - XMA Validator example now recursively scans subdirectories.
+
+21/05/13 4.44.14 - Stable branch update
+----------------------------------------------------
+
++ WiiU - Added the ability to send the output of the software mixer to the DRC,
+         TV or both via new API FMOD_WiiU_SetSoftwareMixerControllerSpeaker.
+		 
++ Windows Phone - Added FMOD_WindowsPhone_PauseSystem API for use when an
+				  application is moving from the running to suspended state.
+
+- Fix Reverb::release leaking DSP connections causing volume irregularities.
+- Fixed parameter index validation when getting/setting DSP parameters.
+
+01/05/13 4.44.13 - Stable branch update
+----------------------------------------------------
+
+- Fix Vorbis encoded FSB files with encryption not working.
+
+- Event API - fix Event/EventGroup::getState not returning error code if 1 
+              event used 2 banks and the first bank load had an error.
+
+- PS4 - Fixed closing the FMOD::System causing platform wide networking to be
+  shutdown even if the system did not initialize it.
+              
+* PS4 - Now built with SDK 0.930
+
+15/04/13 4.44.12 - Stable branch update
+----------------------------------------------------
+
++ FSBankEx - no_guid support or FSBANK_BUILD_NOGUID flag support to disable
+  generation of GUID so that header caching is not used at runtime.
++ iOS - Added support for System::getOutputHandle to return the output AudioUnit.
++ PS3 - Added Visual Studio 2012 support to source releases.
+
+* PS3 - now build with SDK 4.40
+
+- Fixed crash in ogg-vorbis due to out of memory
+- Fixed crash with FMOD_INIT_REVERB_PREALLOCBUFFERS when all channels were played
+- Fixed FMOD Profiler not showing volume bars (runtime bug not profiler itself).
+
+- Blackberry - Fixed potential crash during System::init caused by bps_shutdown.
+- PS4 - Fixed output ports not cleaning up properly when the FMOD::System is
+        closed causing all ports to be in use after 8 reloads.
+
+26/03/13 4.44.11 - Stable branch update
+----------------------------------------------------
+
+- Event API - fix rare crash if a file read callback returned 
+  FMOD_ERR_FILE_NOTFOUND, when at the same time freeEventData as called.
+  
+- Event API - fix crash in music system when loading samples. Introduced in 4.44.09.
+
+* PS4 - Now built with SDK 0.920
+
+14/03/13 4.44.10 - Stable branch update
+----------------------------------------------------
+
+- Fix bug in FMOD_INIT_REVERB_PREALLOCBUFFERS only preallocing enough for half 
+  of the software channels available instead of all of them. Also fixed a
+  potential crash.  Introduced in 4.44.09.
+
+- Event API - fix programmer sounds not calling the release callback in certain 
+  cases
+
+* FSBankLib will now always encode PCM FSBs as PCM16 instead of deciding based
+  on the source file format.
+
+* Xbox 360 - Now built with XDK 21250.7
+
+08/03/13 4.44.09 - Stable branch update
+----------------------------------------------------
+
++ Add FMOD_INIT_REVERB_PREALLOCBUFFERS flag to avoid realtime allocs in mixer.
+
++ WiiU - Significantly reduced load times, file I/O block size now defaults to
+         64KB as per Nintendo recommendations.
++ Android - Added support for x86 devices.
++ PS4 - Added ability to set affinity via FMOD_Orbis_SetThreadAffinity.
+
+- Event API - Fix EventGroup::getState rarely returning FMOD_EVENT_STATE_LOADING
+  forever.
+
+25/02/13 4.44.08 - Stable branch update
+----------------------------------------------------
+
++ Added support for older versions of MS ASX playlist format
++ Added FMOD_TAGTYPE_FMOD - "Sample Rate Change" (datatype float) that gives
+  the user a tag to say the sample rate of a stream has changed mid stream.
+  The user can then call Channel::setFrequency to compensate.  This happens
+  on some netstreams.
++ Windows Store Apps - added C# wrapper
+
+- Fixed race condition causing a crash in FSB and FSB5 codecs.
+- Fixed System::playDSP not disconnecting reverb properly.
+- Fixed potential crash if releasing a subsound of a stream, then its parent.
+- Fixed issue in parsing PLS playlist files with unix line endings
+
+- Windows - Added support for WASAPI exclusive 24bit samples in 32bit container.
+
+- Event API - Fixed envelope points not updating in realtime when connected to 
+  via FMOD Designer's audition feature.
+- Event API - Fixed FMOD_ERR_INTERNAL when loading larger event projects.
+
+11/02/13 4.44.07 - Stable branch update
+----------------------------------------------------
+
+* NaCl - Now built with pepper_23, pepper_24, and pepper_25
+* PS3 - Now built with SDK 430
+* PS4 - Now built with SDK 0.915
+
+31/01/13 4.44.06 - Stable branch update
+----------------------------------------------------
+
+- Fix little endian machines corrupting reverb defs that come over network with 
+  fmod_event_net.
+  
+- Windows Store App - Fixed issue with using multiple FMOD System objects.
+
+25/01/13 4.44.05 - Stable branch update
+----------------------------------------------------
+
++ WiiU - Added ability to set DRC and/or TV output at the event level.
++ PS3 - Added ability to set Single-microphone mode using FMOD_PS3_EXTRADRIVERDATA.
++ Windows Store App - Removed restrictions on calling createSound from UI thread
+
+- Fixed issues with NULL channel handles. System::getChannel will always return a
+  non-null channel handle now.
+
+- Windows Phone - Added fmodwindowsphone.h
+- Windows - Improved WASAPI exclusive mode compatibility resulting in less init fails
+            requiring another init attempt with different settings.
+
+* Exclude channels played with playDSP from going virtual if priority is 0, like streams.
+
+* Android - Now built with NDK r8d.
+
+08/01/13 4.44.04 - Stable branch update
+----------------------------------------------------
+
++ Added FMOD_ADVANCEDSETTINGS::stackSizeStream,stackSizeNonBlocking,stackSizeMixer to 
+  allow modification of fmod's thread stack sizes - mainly for users writing custom 
+  codecs or dsps that need more room.
+
+- Fix FSB CELT support decoding to 2x the memory it should when decompressing into memory.
+- Fixed CELT causing a stack overflow.
+
+- Windows - Fixed getDriverCaps under DirectSound output not returning 
+  FMOD_SPEAKERMODE_5POINT1 in the 'surround' configuration of 5.1 in windows control panel.
+- WiiU - Fixed FMOD_HARDWARE channels looping when they shouldn't if setPause(false) was
+         called at certain times.
+- PlayBook - Fixed hang during System::close.
+- Windows Store App - Fixed issue with using multiple FMOD System objects.
+
+* PSVita - Now built with SDK 2.000.
+  
+17/12/12 4.44.03 - Stable branch update
+----------------------------------------------------
+
++ Windows Store App - Removed restrictions on calling createSound from UI thread
++ Windows Store App - Output feeder and capture threads now have higher scheduling priority.
+- Windows Store App - Fixed deadlock when calling Sound::Release() from the UI thread
+
+- PSVita/WiiU - Fixed channels sometimes not applying speaker maps resulting in
+                incorrect panning.
+
+- Event API - Fix event parameter being at maximum value causing sounds
+  not to play in rare situations.
+- Event API - Fix rare crash if freeing event data at the same time as loading 
+  the same data.
+
+04/12/12 4.44.02 - Stable branch update
+----------------------------------------------------
+
++ Windows Store App - Added ability to record loopback from output devices.
++ Windows Store App - Added ability to specify the application's audio 
+                      category at initialisation time. This changes the way
+                      an application plays background audio.
++ Windows Phone - Implemented recording and getDriverInfo.
++ Windows Phone - Added ARM CPU optimisations.
++ Windows Phone - Improved output driver
+
+- Fix Channel::getPosition() returning FMOD_ERR_UNSUPPORTED when querying 
+  FMOD_TIMEUNIT_RAWBYTES on a streaming channel.
+- Fixed incorrect panning (mono hard panned to left) for non-stream FSBs with
+  mixed channels counts. Bug introduced with 4.43.00 on 03/07/12.
+- Fixed rare bug where pausing a stream doesn't apply properly leaving the
+  channel in an inconsistent state.
+- Fix optimization in stereo speaker mode not being executed when setting
+  pan/speakermix/speakerlevels
+  
+- iOS - Fixed hang on iPad coming from AudioQueue decoder for MP3 files.
+- iOS - Fixed fmod_event_net missing armv7s slice.
+- Windows Store App - Fix FMOD_ERR_FILE_BAD being returned instead of 
+                      FMOD_ERR_FILE_NOTFOUND.
+- Windows Store App - Re-enabled ARM CPU optimisations.
+- Blackberry - Fixed CPU spikes in IO process.
+                      
+- Event API - Fixed redundant DSP code in load function causing slowdown in 
+              load
+
+14/11/12 4.44.01 - Stable branch update
+----------------------------------------------------
+
+- Fix crash is DSP::release was called while voice was virtual and then swapped 
+  back to real.
+  
+- Windows Store App - Fix crash after calling recordStart.
+
+09/11/12 4.44.00 - Initial stable branch release
+----------------------------------------------------
+
++ Windows Store App - Added ability to play audio when the app is in the background.
+                      See Getting Started Guide for details.
+* Windows Store App - Internal refactor to make better use of available system worker 
+                      threads.
+					  
++ Windows Phone - Initial release for Windows Phone. 
+                  See Getting Started Guide for details.					  
+					  
++ Mac - Added FSB Vorbis support
+
+- iOS - Fixed seamless looping issue for AAC files.
+
+26/10/12 4.43.07 - Development branch update
+----------------------------------------------------
+
++ iOS - Added support for CELT and Vorbis FSBs.
++ PS3 - Added DNS lookup capability when opening network connections
++ 360 - Added FSB Vorbis support
+
+!* - Metro - File IO now uses WinRT API. Synchronous IO performed from 
+             the UI thread will deadlock the system. Relative file paths 
+			 are no longer supported. See getting started guide for more 
+			 details on file paths.
+- NaCl - Fixed a bug that was causing stuttering in the output on some machines.
+- Event API - Fix Event::getInfo not returning -1 for looping / infinite 
+              simple events 
+- FSBank - Abort when an invalid cache directory is passed to fsbankexcl
+           instead of using a default location.
+- FSBankLib - Fixed encoder error for multichannel AT9 files when using newer
+              libatrac9.dll files.
+
+* PS3 - Playlist codec is now part of official libraries
+
+
+17/10/12 4.43.06 - Development branch update
+----------------------------------------------------
+
+- Event API - fix EventCategory::setPaused(false) when it was already unpaused 
+              stopping fadeouts working and confusing pause state.
+
+08/10/12 4.43.05 - Development branch update
+----------------------------------------------------
+
++ WiiU - Added ability to overflow FMOD_HARDWARE processing to the CPU if the
+         DSP is overloaded. See FMOD_WIIU_EXTRADRIVERDATA::allowHardwareOnCPU.
++ NaCl - System::init() and System::release() can now be called from any thread.
+
++ Win8 - ARM optimisations added
+
+- Event API - Fixed category based max playbacks not triggering an 
+  FMOD_EVENT_CALLBACKTYPE_STOLEN callback when a steal happened.
+
+* WiiU - Now built with SDK 2.07.03 P5.
+
+25/09/12 4.43.04 - Development branch update
+----------------------------------------------------
+
++ WiiU - Added ability to pass in an FSClient for FMOD to use for file IO, see
+         the getting started guide for details and handling of disk eject.
+         
+- Android - Fixed potential crash during FMODAudioDevice::start.
+- Win8 - Now built with RTM
+- Win8 - Now building for ARM
+- WiiU - Fixed potential 'FS Fatal' race condition.
+- WiiU - Fixed surround panned audio being inaudible when sent to the DRC.
+
+* Maximum 3D listeners now set to 5 to accommodate WiiU 5 player mode.
+
+* WiiU - Now built with SDK 2.07.03 P3.
+* iOS - Now built with SDK 6.0.
+
+04/09/12 4.43.03 - Development branch update
+----------------------------------------------------
+
+- Win8 - Fixed device addition and removal notification
+- WiiU - Fixed incorrect speaker mode from System::getDriverCaps when system
+         is not set to stereo.
+- PS3 - Fix celt stream decode for channel counts greater than two.
+         
+* WiiU - Now built with SDK 2.07.03.
+* PSVita - Now built with SDK 1.800.
+
+22/08/12 4.43.02 - Development branch update
+----------------------------------------------------
+
+- Fixed 6ch sounds inside FSB bank with mixed channel counts (ie 8ch, stereo)
+  causing hang upon read or stuttering when playing.  Introduced in
+  "18/08/11 4.39.00 - pre 2 Development internal update"
+- Fix netstreams failing on ID3 tags and returning EOF prematurely.
+
+- iOS - Fixed initialization of FMOD system sometimes having incorrect default
+        values if extradriverdata is not set.
+  
+- Event API - Fixed 'just fail if quietest' events that use a distance parameter
+              + volume effect, using the FMOD_EVENT_INFOONLY flag to set the 3d 
+              position, not stealing/failing properly.
+			  
+- PS3 - Fixed occasional incorrect decode of vorbis encoded stereo sounds
+
+* NaCl - Now built with pepper_20 rev 144678, pepper_21 rev 151411
+
+07/08/12 4.43.01 - Development branch update
+----------------------------------------------------
+
++ PSVita - Added support for automatic distance filtering for FMOD_HARDWARE
+           channels.
+           
+- Fixed bug releasing vorbis codec-setups when closing FSBs.
+
+- WiiU - Fixed missing symbol for FMOD_WiiU_SetReverbProperties.
+- PSVita - Fixed bug where mono or stereo subsounds in a multi-channel FSB
+           stream would play louder than expected.
+- PSVita - Fixed bug where Channel::setSpeakerLevels could be overridden by
+           Channel::setVolume.
+- PSVita - Fixed Channel::setSpeakerLevels not working correctly on stereo
+           channels.
+           
+* Changed system object creation limit from 15 to 16 maximum.
+* WiiU - Now built with SDK 2.06.02.
+
+19/07/12 4.43.00 - Initial development branch release
+----------------------------------------------------
+
++ PS3 - Optimisation of vorbis has made CPU usage comparable with MP3
++ WiiU - Added support for 6ch mixing in hardware and software. Hardware fully
+         controllable via setSpeakerMix and setSpeakerLevels.
+         
+- Fixed crash in vorbis decode when the number of availiable codecs is set
+  explicitly.
+- Fixed small memory leak when unloading vorbis FSBs
+- PS3 - Fixed playback issue with streaming vorbis playback
+- PS3 - Fixed stack overflow when loading vorbis FSB asynchronously
+- PS3 - Fixed race condition when streaming a vorbis FSB and opening another asynchronously
+
+!* Changed the way quality settings are applied when encoding vorbis.
+* Linux - x86 and x64 versions are now unified in one package.
+* PS3 - Now built with SDK 4.2.0.
+
+29/06/12 4.43.00 - pre 10 Development internal update
+----------------------------------------------------
+
+- Fixed small inaccuracy in vorbis seeking
+- Fix setPosition on CELT compressed samples reading to far
+- Fix crash inside vorbis encoder when compressing low sample rate sources at
+  very low qualities
+- Fix crash when calling setPosition on a compressed-in-memory stereo CELT sound
+
+- PS3 - Fixed vorbis streaming crash on the SPU
+
+* Reduced memory overheads in FSB's using vorbis compression. Both per-bank
+  overhead and per-sound overheads been improved. Banks must be rebuilt to
+  take advantage of the reduction but existing banks will continue to load.
+
+22/06/12 4.43.00 - pre 9 Development internal update
+----------------------------------------------------
+
++ PS3 - Added FMOD_INIT_PS3_DISABLEDTS and FMOD_INIT_PS3_DISABLEDOLBYDIGITAL
+		for controling output format.
++ WiiU - Added FMOD_WiiU_SetControllerSpeaker to control whether an FMOD::Channel
+         will play on the TV, DRC or both.
+
+- fix crash on rare combination of seeking inside an mp3 at a certain position 
+  with certain bit pattern.  
+- Fixed distorted output when certain input files are encoded with vorbis
+- Fixed occasional error loading FSB's with vorbis encoded sounds
+- Fixed buffer overflow in high quality multi-channel vorbis streams
+
+- iOS - Fixed crash when re-initializing FMOD system object.
+- iOS - Fixed HE-AAC seeking being incorrect.
+- iOS - Fixed AudioQueue codec playback issues.
+- Metro - Replaced system calls that no longer work in Release Preview
+- Linux - Fixed potential hang during System::recordStart with certain realtime
+          OS configurations.
+- Linux - Removed some dependency on newer GLIBC versions making the FMOD lib
+          much more compatible.
+- Win/Mac/Linux - Fixed logging version of FMOD so it correctly outputs to file
+                  instead of TTY.
+- Win - Fixed problem with CDDA on SATA drives attached to slave port
+                  
+- FSBank - Fixed mutli mode banks not using specified compression format
+
+* Allow FMOD_SPEAKERMAPTYPE_ALLMONO/STEREO sounds to be panned with setPan and 
+  setSpeakerMix
+
+05/06/12 4.43.00 - pre 8 Development internal update
+----------------------------------------------------
+
++ WiiU - Added platform specific reverb implementation, see getting started
+         guide for details.
+       
+!- Fix innocent errors disabling the mixer, changed to only occur when out of 
+   memory.
+  
+- iOS - Fixed AudioQueue codec so it will correctly decode HE-AAC audio instead
+        of using the fallback decoder which ignores the high frequency content.
+- PS3 - Fixed crash in Vorbis decode when using reverb or other effects
+- 3DS - Fixed FSB5 GCADPCM sometimes coming out as static.
+
+* Metro Style - Now built with Consumer Preview Update 2
+* 3DS - Now built with SDK 3.3.2.
+* WiiU - Now built with SDK 2.05.
+
+25/05/12 4.43.00 - pre 7 Development internal update
+----------------------------------------------------
+
+- Fix crash on corrupted mp3.
+- Out of memory errors from the mixer now do not crash the mixer, but disable
+  it and play a pulsating sine wave sound.
+- Re-add support for XADPCM (now called Voxware Byte Aligned codec) wav files.
+
+15/05/12 4.43.00 - pre 6 Development internal update
+----------------------------------------------------
+
++ BlackBerry - Added support for the BlackBerry PlayBook using BBNDK 2.0.1.
+
+- Fix FMOD_OPENUSER streams not passing the user defined decodebuffersize to the
+  callback and instead passing a value that was rounded to the nearest 256.
+
+- Xbox 360 - Fixed infinte recursion when calling getMemoryInfo on compressor DSP
+
+- PS3 - Fixed synchronisation issue in SPU code for external job system
+- PS3 - Fixed bug in external_job_system example
+
+* NaCl - Default DSP buffer length is now 1056
+* WiiU - Now built with SDK 2.04.
+
+18/04/12 4.43.00 - pre 5 Development internal update
+----------------------------------------------------
+
+!* WiiU - Now compiled with GHS 5.3.11, must be linked with 5.3.10 or newer, see
+          WarioWorld for details about the breaking change. 
+ 
++ Metro - Ported FMOD Ex to the Windows 8 Metro platform.
+
+- PS3/X360 - Fixed stack overrun in CELT codec
+- Android - Squashed an InvalidState exception from AudioTrack output mode.
+            It will now retry 3 times to connect to hardware before silently
+            failing, use FMODAudioDevice.isMixing() to verify operation.
+- Fixed bug in highpass simple that was introducing noise on side-left channel
+
+* NaCl - Now support pepper 19 audio API
+* WiiU - Now built with SDK 2.03.
+* PSVita - Now built with SDK 1.650.
+* 3DS - Now built with SDK 3.3.1.
+* PS3 - Now built with SDK 410.001
+
+04/04/12 4.43.00 - pre 4 Development internal update
+----------------------------------------------------
+
++ Event API - Added EventParameter::disableAutomation to allow programmer to 
+  disable listener angle, distance, event angle automatic parameter updates.
+  
++ PS3 - Added ability to use a callback to start SPU jobs. See 
+  external_job_system example and Getting Started Guide for details.
+
+- Fixed loading FLAC files that report 0 length.
+- Fixed WPL and ASX playlist so they report string tags as UTF-8.
+
+- WiiU - Fixed crash when playing GCADPCM audio.
+- Mac - Fixed CELT loading error.
+- PSVita - Fixed potential playback errors with AT9 data.
+- PSVita - Fixed AT9 seeking problems on multichannel sound.
+- iOS - Fixed recording not working in the simulator.
+- PS3 - Fixed crash when playing back IMAADPCM audio.
+- PS3 - Fixed crash when calling init a second time in certain cases 
+- Win - Fixed multiple devices with the same name being merged in the device
+        list when using WASAPI.
+
+- Event API - Fixed spawn intensity not working if the bank is hardware.
+
+01/03/12 4.43.00 - pre 3 Development internal update
+----------------------------------------------------
+
+- Event API - Fixed crash when loading FEV
+
+29/02/12 4.43.00 - pre 2 Development internal update
+----------------------------------------------------
+
+- Fixed thread affinity being ignored for non-blocking thread.
+- Fixed potential crash during EventSystem::load if an out of memory or disk
+  eject condition occurs.
+
+- WiiU / 3DS - Fixed non-blocking thread failing to run, hence fixed music
+               system failing to play. 
+               
+- WiiU - Fixed crash at System::init with SDK 2.02. 
+
+* WiiU - Now built with SDK 2.02.
+* PSVita - Now built with SDK 1.600.
+
+24/02/12 4.43.00 - pre 1 Development internal update
+----------------------------------------------------
+
++ Added new reverb flag FMOD_REVERB_FLAGS_HARDWAREONLY to ensure only hardware
+  reverbs are created. No SFX reverb will be created when using this flag.
+
++ FSBankLib - Added ability to provide custom memory callbacks.
+
+- Fixed crash when loading FSB5 files containing 6 channel audio on big endian platforms.
+- Fixed endian issue with 32bit Wav and Aiff files.
+- Fixed length calculation with certain invalid IMA ADPCM wave files.
+
+- PSVita - Fixed potential leak of AT9 channels when using FSBs containing sounds
+           with more then 2 channels.
+- PSVita - Fixed incorrect reverb volume for FMOD_HARDWARE channels if volume is set
+           before first System::setReverbProperties.
+
+* PSVita - AT9 is now a hardware only format.
+* WiiU - Now built with SDK 2.0.
+
+02/02/12 4.43.00 - Initial Internal branch release
+----------------------------------------------------
+
+- PSVita - Fixed ChannelGroup::setVolume not applying correctly for FMOD_HARDWARE
+           channels.
+
+- Event API - EventSystem::preloadFSB now returns an error if the FSB has 
+  already been loaded by a previous getEvent or load command.
+
+* Linux is now compiled as position independent code (PIC).
+* PS3 - Now built with SDK 400.001.
+
+18/01/12 4.41.00 - pre 7 Development internal update
+----------------------------------------------------
+
+- Fixed memory leak when using Channel::setSpeakerLevels.
+
+- FSBankLib - Changed generated headers to strip the .fsb file extension before 
+              appending .h.
+- Event API - Fixed event playback bugs when virtual channel count is exceeded
+- Event API - Fixed Event::setPitch so it no longer randomizes event pitch
+- Event API - Fixed FMOD_ERR_ALREADYLOCKED being returned from loadEventData
+- NaCl - Fixed bug in reading system timer
+
++ Added vorbis encoding support to FSB. Decoding is supported in windows, X360 & PS3
+
+28/12/11 4.41.00 - pre 6 Development internal update
+----------------------------------------------------
+
+!+ WiiU - Added new platform, development still on-going. Currently built against
+          SDK 1.9.1.
+
++ PSVita - Greatly improved performance of AT9 decoding making use of new multi
+           frame decoding in SDK 1.500.
+
+- Fixed positionms inaccuracy when there are multiple system objects.
+- Fixed bug when using ASIO output driver with custom multi-channel routing.
+- Fixed ASIO driver closing when initialising a second system object using
+  ASIO driver.
+
+- PSVita - Fixed crash when using SDK 1.500.
+
+* PSVita - Now built with SDK 1.500
+* Xbox 360 - Now built with XDK 21076.6
+
+14/12/11 4.41.00 - pre 5 Development internal update
+----------------------------------------------------
+
+- Fixed MPEG FSB seeking accuracy issues.
+
+- Xbox 360 - Fix XMA seeking seeking/looping to the wrong position for streams.
+
+12/12/11 4.41.00 - pre 4 Development internal update
+----------------------------------------------------
+
++ Added FMOD_EVENT_STATE_NEEDSTOLOAD flag to determine on an info only event if 
+  EventGroup::loadEventData has been called or not.
+
+- Win64 - Fixed FMOD_DSP_LOWPASS_SIMPLE crash
+- Linux - Fixed dynamic linker error that would cause some distros to fail loading.
+- PSVita - Fixed System::init failure if already initialized networking.
+- Event API - Fixed Reverb Level and Reverb Balance Level to have an additive
+              effect.
+
+28/11/11 4.41.00 - pre 3 Development internal update
+----------------------------------------------------
+
++ 3DS - Added support for setting whether an FMOD thread will run on the system
+        core via FMOD_3DS_EXTRADRIVERDATA. This requires SDK 3.1+ to work.
+        Note! FMOD_3DS_INFO has been replaced with FMOD_3DS_EXTRADRIVERDATA in
+        fmod3ds.h to bring it in line with other platforms.
+
+- Fixed FSB5 corrupt audio playback with certain compression formats. Introduced
+  03/11/11 4.41.00 pre 1.
+- Fixed MIDI pan not working in .MID playback.
+- Fixed certain speaker levels in DSPConnection and Channel not being correctly
+  applied.
+
+- PSVita - Removed some checks from hardware channel API calls to improve speed.
+- PSVita - Fixed stereo HE-VAG loose files having incorrect length.
+
+* 3DS - Now built with SDK 2.4.2
+
+17/11/11 4.41.00 - pre 2 Development internal update
 ----------------------------------------------------
 
 - Fix crackling noise if 1st sound of multi-sound FSB had a very low 
   sample rate, and the FSB was streamed.
+- Fixed crash when loading an FSB without FMOD_LOWMEM.
 
-03/11/11 4.34.14 - Stable branch update
+- Event API - Made sounddef trigger delay work on hardware platforms
+- Event API - Fixed crashes in the music system after unloading and reloading a
+              preloaded FSB
+- NaCl - Libs built with glibc toolchain available
+
+03/11/11 4.41.00 - pre 1 Development internal update
 ----------------------------------------------------
 
++ Added FMOD_SPEAKERMODE_SRS5_1_MATRIX speaker mode.  This replaces 
+  FMOD_SPEAKERMODE_PROLOGIC (for windows only at the moment) to provide
+  a proper high quality surround encoder, which not only works on Dolby 
+  Prologic and Prologic 2 amps, but also the more advanced SRS 
+  CircleSurround on devices that support it.  This encoder gives more
+  accurate and clearer 5.1 positioning using only a stereo analog signal!
+
+- Android - fixed AudioTrack native resources not being released.
 - Mac - fixed PPC build missing from universal binary.
+- PSVita - fixed example compile errors and warnings + updated fevs.
 - iOS - fixed some broken examples.
 - Win64 - Fixed cubic resampler crashing in some conditions.
+- NaCl - Fixed missing event libs.
 
-20/10/11 4.34.13 - Stable branch update
+- FSBankLib - Fixed FSB5 header incompatibility causing failed loading, update
+              runtime to handle both old and new FSBs.
+
+* PSVita - Now built with SDK 1.030
+
+20/10/11 4.41.00 - Initial Internal branch release
 ----------------------------------------------------
+
++ PSVita - Added support for Sound::setLoopPoints and loop points set by the
+           codec at createSound time.
+		   
++ PS3 - Optimized CELT decoding to be 2x faster
 
 - Fixed Sound::getName so it will favour ID3v2 tags over ID3v1 tags for better
   Unicode compatibility.
+- Fixed spelling of 'distanceFilterCentreFreq' in the FMOD_ADVANCEDSETTINGS
+  struct from UK to US English.
 - FLAC - fixed corruption/crash.
 
-* iOS - Now built with SDK 5.0
+- Event API - Fixed spelling of FMOD_EVENTPROPERTY_3D_AUTO_DISTANCE_CENTRE_FREQ
+              event property from UK to US English.
 
-04/10/11 4.34.12 - Stable branch update
+* iOS - Now built with SDK 5.0
+* NaCl - Now built with pepper_14 rev 1052, pepper_15 rev 1239
+
+05/10/11 4.39.00 - pre 5 Development internal update
 ----------------------------------------------------
 
++ Added System::registerDSP and EventSystem::registerDSP for registering
+  statically linked DSP plugins.
+
 - Fix .IT support if ModPlugTracker had 'sample vol' above 127 causing playback 
-  to be silent
+  to be silent.
 - Fix MPEG decoder accepting rare cases of bogus frames.  Fixed non-FMOD_MPEGSEARCH
   mode searching to the end of the file if some frames were valid but the rest 
   were not.
@@ -46,68 +1259,173 @@
 - Fixed Sound::getName returning ANSI strings when using FMOD_UNICODE instead of
   wide string for MP3s with ID3 title tags.
 
+- PS3 - Fixed crash when playing CELT in certain cases.
 - iOS - Fixed crash if connecting AV after System::init and System::close.
 
+* System::createCodec is now called System::registerCodec.
 * PS3 - Now built with SDK 370.001
 * Xbox 360 - Now built with XDK 20871.2
 
-15/09/11 4.34.11 - Stable branch update
+15/09/11 4.39.00 - pre 4 Development internal update
 ----------------------------------------------------
+
+- FSBankLib - Fixed compatibility issue between FEVs made with Designer and
+  FSBs made with FSBankEx tool.
 
 - Xbox360 - Fixed occasional crash with recording.
 
-31/08/11 4.34.10 - Stable branch update
+- Event API - Fixed the music system so that sequenced segments always play for
+              at least one beat before moving to the next segment.
+
+* Android - API level 9 libs have been removed, OpenSL output mode is now
+  dynamically supported with the API level 3 libs.
+* PSVita - Now built with SDK 1.00
+
+31/08/11 4.39.00 - pre 3 Development internal update
 ----------------------------------------------------
+
++ FSBankLib - added support for unicode.
 
 - Fixed potential memory overwrite when using unicode.
 - Fixed rare crash if freeing a ChannelGroup or DSP node in a certain order.
+- Fixed crash when loading FSB5 files on console platforms.
+- Fixed crash when using .MID files, introduced 18/05/11 4.37.00 - pre 4.
+- Fixed hang on certain sounds due to readData fix, introduced 18/08/11
+  4.39.00 pre 2.
 
-19/08/11 4.34.09 - Stable branch update
+18/08/11 4.39.00 - pre 2 Development internal update
 ----------------------------------------------------
 
+!+ Added support for new FSB5 format. Tools will now output FSB5 files. 
+   This new format is much more memory efficient, using less memory than FSB4 
+   basic headers!
+
++ PSVita - Added support for AT9 compressed streaming FSBs, this format has
+  better compression than HE-VAG and is ideal for music.
++ Xbox360 - Added support for XWMA compressed streaming FSBs.
+
+- Fix Sound::readData from hanging with non aligned sizebytes values.
 - Fixed streams not restarting from position 0 if paused, setPosition called,
   then restarted.
 - Fixed .wav based IMA-ADPCM length calculation.
+- Fix rare crash in .IT format when playing/stopping repeatedly.
 
-03/08/11 4.34.08 - Stable branch update
+- PSVita - Fixed multichannel sounds not being panned to the correct speakers.
+- 3DS - Fixed multichannel PCM sounds not being panned to the correct speakers.
+- PSVita - Fixed error when Channel::setFrequency is called with a frequency
+           out of the range a hardware voice can handle, causing channels to
+           not stop properly.
+- PSVita - Fixed the start of streams sometimes being cutoff in hardware.
+
+- FSBankLib - Added support for AT9 encoded FSBs for FSB5 format.
+
+* FMOD_INIT_SOFTWARE_OCCLUSION is now FMOD_INIT_OCCLUSION_LOWPASS and
+  FMOD_INIT_SOFTWARE_HRTF is now FMOD_INIT_HRTF_LOWPASS. This change is to show
+  these features are available in hardware on selected platforms.
+* PSVita - Now built with SDK 0.996
+* 3DS - Now built with SDK 2.4
+
+03/08/11 4.39.00 - pre 1 Development internal update
 ----------------------------------------------------
 
++ Added chorus and flange support to .it playback, as well as effect sends.
+
 - Fixed corrupted syncpoint data when loading .mp3 files that have syncpoints.
+- Fixed .it sample vibrato sweep behaviour.
 - fix problem introduced to mpeg length calculation when tags are involved.
-  (introduced 4.34.05)
+  (introduced 4.37.00 pre5)
 - Fixed CELT not looping seamlessly.
 - Fixed volume levels reported by Profiler being incorrect for channel counts
   other than 1, 2 or 6.
 - Fixed crash when playing multichannel CELT.
+- remove FMOD_DSP_REVERB.  Use FMOD_REVERB_SFXREVERB instead.
 - Fixed pitch envelope support in .it format
+- Fixed streams reporting that they are still playing after finishing, 
+  introduced in 4.39.00
 
-14/07/11 4.34.07 - Stable branch update
+- PSVita - Fixed FMOD_INIT_SOFTWARE_DISABLE preventing HW playback too.
+- PSVita - Fixed System::setReverbProperties causing an error.
+- PSVita - Fixed Channel::setSpeakerLevels not working for hardware voices.
+
+* Chorus behaviour different, now pans each tap into alternating speakers, and
+  feedback has been removed.
+
+14/07/11 4.39.00 - Initial Internal branch release
+-----------------------------------------------------
+
+- PSVita - Fixed rare potential crash in codec AT9.
+- PSVita - Reduced per-channel and per-AT9 codec memory usage.
+- Android - Fixed crash with unsupported devices (without float hardware).
+
+* PSVita - Now built with SDK 0.995
+
+30/06/11 4.37.00 - pre 6 Development internal update
 ----------------------------------------------------
 
++ NGP - Added ATRAC9 codec support.
 
-30/06/11 4.34.06 - Stable branch update
-----------------------------------------------------
++ Event API - Added the event system initialisation flag 
+              FMOD_EVENT_INIT_ELEVATION_AFFECTS_LISTENER_ANGLE which changes
+              how the 3D Listener Angle event parameter is calculated to take
+              changes in elevation into account.
+
++ Event API - Fixed crash when loading a non-blocking sound for the second time
+              after FMOD has been shutdown and re-initialized.
+
++ Event API - Added the event system initialisation flag 
+              FMOD_EVENT_INIT_DONTUSELOWMEM which tells FMOD to NOT use
+              FMOD_LOWMEM when opening .FSB files.
 
 - Fixed corrupt frames in MP3 decoding which could cause FSBs to bleed the start of
   one subsound into the end of another.
 - Fixed a race condition that could cause FMOD to hang.
 - Fixed channel order for 5.1 and 7.1 Ogg Vorbis files.
+- Remove ChannelGroup::setReverbProperties and FMOD_REVERB_CHANNEL_DISABLE flag, 
+  this sort of functionality will be reintroduced at a later date
+
+- NGP - Fixed stereo sounds only played out of left speaker if
+        Channel::setSpeakerMix is called.
+- NGP - Fixed streaming bug causing the start of a stream to be incorrect on a
+        second playback.
 
 - Event API - Fixed MusicSystem::getInfo crashing if no music data is loaded
 - Event API - Fixed loading certain FEV's with no Event Groups or any names.
 
-02/06/11 4.34.05 - Stable branch update
+* Event API - FMOD_LOWMEM is now used when opening .FSB files. This will save
+              memory. Use FMOD_EVENT_INIT_DONTUSELOWMEM to disable this behaviour.
+
+02/06/11 4.37.00 - pre 5 Development internal update
 ----------------------------------------------------
+
++ Add ChannelGroup::setReverbProperties.  This allows reverb to connect to 
+  a channelgroup rather than just a channel.
++ Added a distance-automated filtering effect which can be enabled on all 3d
+  sounds with FMOD_INIT_DISTANCE_FILTERING and can be tuned with the 
+  distanceFilterCentreFreq member of FMOD_ADVANCEDSETTINGS struct and 
+  FMOD::Channel::set3DDistanceFilter(). This uses the built-in lowpass and an 
+  extra highpass filter to achieve a bandpass effect.
+
++ NGP - Optimized software mixer with NEON asm.
+
++ Event API - Added two event properties for the new distance effect:
+              FMOD_EVENTPROPERTY_3D_AUTO_DISTANCE_FILTERING and 
+              FMOD_EVENTPROPERTY_3D_AUTO_DISTANCE_CENTRE_FREQ.
 
 - Fix distortion if flange effect had clipping/amplified audio sent to it.
 - Fix altered flange effect to sound more like original flange effect.
+- Fix buzzing noise on certain DSP connection setups if leaf node is idle.
 - Fixed seeking in MP3 being slightly innacurate in CBR mode with no 
   FMOD_ACCURATETIME flag set.
 
 - PS3 - Removed network initialization/finalize code from fmod_event_net so
         that it doesn't interfere with user network code. If using this library
         you must now initialize/finalize the network.
-- PS3 - Fixed crash in DSP Flange effect introduced in 4.33.09
+- PS3 - Fixed crash in DSP Flange effect introduced in 4.35.00 pre 9.
+- 3DS - Fixed rare crash when stopping a channel.
+- 3DS - Fixed crash if using getMemoryInfo function.
+- Android - Worked around crash if using RTTI in application code due to STL bug.
+- Android - Worked around crash if running on a pre 2.2 device due to STL bug.
+- Android - Reduced default latency by setting default DSP buffer size to 512.
 - iOS - Worked around bad OS handling of HDMI connections by resetting output mode.
 
 - FSBankLib - Fixed potentially corrupted FSB audio for VAG and HE-VAG formats.
@@ -115,32 +1433,80 @@
 * .FEV file format updated! If you build with FMOD Designer 4.35.05, you must
   use FMOD version 4.35.05, 4.34.05 or higher.
 
-18/05/11 4.34.04 - Stable branch update
+18/05/11 4.37.00 - pre 4 Development internal update
 ----------------------------------------------------
 
-- Fix flange clicking at low output rates, introduced 4.33.09
++ Add FMOD_REVERB_DISABLE mode bit.  This stops sounds with this connecting 
+  to the software SFX reverb unit.
 
-12/05/11 4.34.03 - Stable branch update
++ NGP - Added fmodngp.h and FMOD_NGP_EXTRADRIVERDATA to allow setting of
+        thread affinities for FMOD threads.
+
+- Fix mod/s3m/xm/it support causing mem overwrite, issue introduced in 
+  4.37.00 pre 3
+- Fix flange clicking at low output rates, introduced 4.35.00 pre 9
+
+- NGP - Fixed geometry occlusion not working, introduced in last release.
+
+13/05/11 4.37.00 - pre 3 Development internal update
 ----------------------------------------------------
 
-- Win32 - Fix FMOD_SPEAKERMODE_PROLOGIC being forced back to the control panel speaker 
-          mode when using FMOD_OUTPUTTYPE_WASAPI
++ Add multithreaded loading.  Up to 5 threads can be used at once to load 
+  sound files.  See FMOD_CREATESOUNDEXINFO::nonblockthreadid or 
+  FMOD_EVENT_NONBLOCKING_THREAD0 to FMOD_EVENT_NONBLOCKING_THREAD4.
++ Optimized FMOD_DSP_TYPE_LOWPASS_SIMPLE and occlusion effects to be 2x faster
++ Added FMOD_DSP_TYPE_HIGHPASS_SIMPLE which is a fast first-order highpass
 
-28/04/11 4.34.02 - Stable branch update
++ NGP - Added recording support.
++ Win32 - Add SRS CircleSurround downmixing - Prologic 2 compatible, high 
+          quality surround encoding.
+
+- Remove DTS Neural downmixing.
+
+- Android - Fixed crash on init when using OpenSL output mode if any driver.
+- Android - Fixed crash in simulator.
+  related pre-init functions are called.
+- Win32 - Fix FMOD_SPEAKERMODE_PROLOGIC being forced back to the control panel
+          speaker mode when using FMOD_OUTPUTTYPE_WASAPI
+
+* 3DS - Now built with SDK 2.2
+
+29/04/11 4.37.00 - pre 2 Development internal update
 ----------------------------------------------------
+- fix FMOD_REVERB_PROPERTIES struct & reverb presets not matching up.
 
 - Event API - Fixed missing symbols when linking against XBox360 fmod_event.lib
 
-20/04/11 4.34.01 - Stable branch update
+* NGP - Now built with SDK 0.990
+
+20/04/11 4.37.00 - pre 1 Development internal update
 ----------------------------------------------------
++ Win32 - Add granular_synth example.  This shows how to create a dynamic
+  string of sounds that play one after the other with sample accurate quality.
++ Android - Added support for native C audio output via OpenSL ES with 
+            recording support.
+
++ Event API - Added FMOD_EVENTPROPERTY_3D_POSRANDOMIZATION_MIN and renamed
+              FMOD_EVENTPROPERTY_3D_POSRANDOMIZATION to
+              FMOD_EVENTPROPERTY_3D_POSRANDOMIZATION_MAX
 
 - Fix long mp3 files (ie 7hours +) returning incorrect length.
+- Reverb - remove redundant settings from fmod.h.  Note FMOD_REVERB_PROPERTIES
+  and FMOD_CHANNEL_REVERPROPERTIES structure changes.
 - Fixed net streams causing a stack overflow when loaded non-blocking.
 - Fixed certain net streams not loading.
 
-07/04/11 4.34.00 - Initial stable branch release
-----------------------------------------------------
+- NGP - Fixed corrupted playback of HE-VAG .vag files.
+- 3DS - Fixed rare case where start of stream gets cut off when the same channel
+        is being used to replay a stream.
+- 3DS - Fixed glitch sometimes occuring when starting a sound paused.
 
+* Change System::getDriverCaps to return outputratecontrolpanel instead of 
+  minfrequency/maxfrequency which only really made sense for win32 hardware 
+  voices and win32 hardware voice support was dropped a few versions ago.
+
+07/04/11 4.37.00 - Initial development internal release
+----------------------------------------------------
 + 3DS - Optimized software mixer.
 + PS3/Xbox360 - enabled netstreaming.
 + Win32 - Runtime impact of FMOD_INIT_ENABLE_PROFILE further reduced.
@@ -161,7 +1527,7 @@
 - Event API - fixed envelope corruption at load time on 64 bit platforms.
               Introduced in version 4.33.00.
 - Event API - Fixed a divide by zero crash when using sound definitions with
-              only one entry and Play Mode set to Shuffle or Shuffle Global
+              only one entry and Play Mode set to Shuffle or Shuffle Global.
 - Event API - Fixed SoundDef 3D position randomization so that calling
               set3DAttributes on the event accounts for the random position factor.
 
@@ -172,9 +1538,8 @@
 * PS3 - Now built with SDK 360.001
 * Xbox 360 - Now built with XDK 20500
 
-02/03/11 4.33.09 - development branch update
-----------------------------------------------------
-
+02/03/11 4.35.00 - pre 9 Development internal update
+------------------------------------------------------
 + Runtime impact of FMOD_INIT_ENABLE_PROFILE significantly reduced.
 
 + Event API - Added support for setting the music system cache delay to match
@@ -201,9 +1566,8 @@
 
 * PS3 - Libraries renamed to more compliant libXXX.a format.
 
-31/01/11 4.33.08 - development branch update
-----------------------------------------------------
-
+31/01/11 4.35.00 - pre 8 Development internal update
+------------------------------------------------------
 + Added 'sourcestr' parameter to FMOD_MEMORY_ALLOCCALLBACK,
   FMOD_MEMORY_FREECALLBACK,FMOD_MEMORY_REALLOCCALLBACK.
   Only valid (not null) in logging versions of FMOD.  Gives a string with the 
@@ -236,20 +1600,17 @@
 
 * Xbox360 - FMOD is built with XDK 20353
 
-05/01/11 4.33.07 - development branch update
-----------------------------------------------------
-
+5/01/11 4.35.00 - pre 7 Development internal update
+------------------------------------------------------
 + add FMOD_MEMORY_DSP_OUTPUTBUFFER to memory type callback.
 
 + PS3 - Add Dolby Logo Usage Guidelines to PS3 getting started document.
 + Win32 - Add record_realtimeplayback example.
-
-+ Event API - Cancel sound playback if an error is returned from the
-              FMOD_EVENT_CALLBACKTYPE_SOUNDDEF_SELECTINDEX callback
++ Jungle - Ported FMOD Ex to the Jungle platform.
 
 - Fix small memory leak when calling System::close/release.
 - Fixed default FMOD_3D_INVERSEROLLOFF not applied to 3d sounds when a rolloff
-  flag has not been specified (introduced in 4.33.02).
+  flag has not been specified (introduced in 4.35.00 - pre 2).
 - Fixed MPEG codec so it doesn't incorrectly identify files as valid.
 - Updated to latest Neural DTS code. Fixes some audio corruptions issues.
 
@@ -273,17 +1634,16 @@
 
 * Xbox360 - FMOD is built with XDK 20209.3
 
-1/12/10 4.33.06 - development branch update
-----------------------------------------------------
-
+01/12/10 4.35.00 - pre 6 Development internal update
+------------------------------------------------------
 + Optimized DSPI::release to be non blocking.
 + Added "diskbusy" parameter to Sound::getOpenState, to report whether the
   disk is being accessed for that sound.
 - Fixed Channel::setSpeakerLevels being wrong if using virtual voices.
 
 + Event API - Optimized EventGroup::freeEventData to be non blocking.
-+ Event API - Added FMOD_MUSIC_CALLBACKTYPE_CHANNEL_CREATED and
-              FMOD_MUSIC_CALLBACKTYPE_CHANNEL_DESTROYED.
++ Event API - Cancel sound playback if an error is returned from the
+              FMOD_EVENT_CALLBACKTYPE_SOUNDDEF_SELECTINDEX callback
 
 - Fixed incorrect playback of sentences with Sound::setSubSoundSentence if 
   more than one subsound fit into the front buffer of a stream.
@@ -305,12 +1665,14 @@
 
 - Profiler - Made more robust when encountering corrupted packets.
 
-10/11/10 4.33.05 - development branch update
-----------------------------------------------------
-
+12/11/10 4.35.00 - pre 5 Development internal update
+------------------------------------------------------
 + Added ability to set the granularity of the MIDI mixer via the 
   FMOD_CREATESOUNDEXINFO minmidigranularity member. Values less than 512 will
   give greater accuracy at the cost of CPU, and vice versa.
+
++ Event API - Added FMOD_MUSIC_CALLBACKTYPE_CHANNEL_CREATED and
+              FMOD_MUSIC_CALLBACKTYPE_CHANNEL_DESTROYED.
 
 - iPhone - Fixed output freezing when device is locked, and playing ducked
            iPod audio.
@@ -325,14 +1687,12 @@
             audioqueuepolicy member.
 * iPhone - Now built with SDK 4.2
 
-22/10/10 4.33.04 - development branch update
+22/10/10 4.35.00 - pre 4 Development internal update
 ----------------------------------------------------
-
 * PS3 - Now built with SDK 350.001
 
-5/10/10 4.33.03 - development branch update
-----------------------------------------------------
-
+5/10/10 4.35.00 - pre 3 Development internal update
+------------------------------------------------------
 + Added FMOD_MEMORY_SAMPLEDATA to memory allocation callback types.
 
 + xbox360 - Added support for xWMA file format.
@@ -354,10 +1714,8 @@
 !* PS3 - FMOD no longer initialises libMic. You now need to initialise and
          shutdown libMic yourself if recording is required.
 
-
-15/09/10 4.33.02 - development branch update
-----------------------------------------------------
-
+15/09/10 4.35.00 - pre 2 Development internal update
+------------------------------------------------------
 + Added a new FMOD_3D_LINEARSQUAREROLLOFF roll-off curve which has a steep
   initial roll-off similar to FMOD_3D_INVERSEROLLOFF but tapers to zero at max
   distance.
@@ -398,9 +1756,8 @@
 
 * iPhone - Now built with SDK 4.1
 
-24/08/10 4.33.01 - development branch update
-----------------------------------------------------
-
+24/08/10 4.35.00 - pre 1 Development internal update
+------------------------------------------------------
 + Less memory overhead per FMOD allocation = good memory savings.
 
 + Event API - fmod4 - add FMOD_EVENTPROPERTY_DSPCLOCKSTART_HI/LO to allow 
@@ -415,14 +1772,13 @@
 - iPhone - Fixed AudioQueue codecs not restarting when an app is sent to the
            backrgound then restarted.
 
+- Event API - Fixed mute state not being reset when getting an event instance
+
 - PS3 - Fixed crash when calling Sound::release() on a sound loaded with
         FMOD_LOADSECONDARYRAM, introduced in 4.33.00 pre 2.
 
-- Event API - Fixed mute state not being reset when getting an event instance
-
-5/08/10 4.33.00 - Initial development branch release
-----------------------------------------------------
-
+12/08/10 4.35.00 - Initial development internal release
+------------------------------------------------------
 + Unblocked setParameter for DSP Flange.
 + PS3 - Unblocked setParameter for DSP Echo.
 
@@ -452,7 +1808,6 @@
 
 22/07/10 4.33.00 pre 5 - Development internal update
 ----------------------------------------------------
-
 + Optimized speaker level setting of DSP nodes which increases performance across 
   the board especially with 3d calculations and custom 2d speaker level settings.
 + Add add Sound::setMusicSpeed/getMusicSpeed to change playback speed of 
@@ -496,7 +1851,6 @@
 
 01/07/10 4.33.00 pre 4 - Development internal update
 ----------------------------------------------------
-
 + iPhone - Added ability to specify whether AudioQueue codec sounds are decoded
            using hardware or software via the new FMOD_CREATESOUNDEXINFO member
            extracodecdata.
@@ -550,7 +1904,6 @@
 
 28/05/10 4.33.00 pre 3 - Development internal update
 ------------------------------------------------------
-
 + Wii - Added NMIC recording support.
 + Add pan slide command support for modplug created .it files.
 + Event API - Reduced fragmentation with EventSystem::load and reduced overall 
@@ -578,7 +1931,6 @@
 
 10/05/10 4.33.00 pre 2 - Development internal update
 ------------------------------------------------------
-
 + Wii - Added FMOD_INIT_WII_DISABLEDOLBY init flag to default to stereo even
         if surround is selected in the Wii system menu.
 + iPhone - Added the ability to duck the iPod at runtime, see fmodiphone.h for 
@@ -624,7 +1976,6 @@
 
 21/04/10 4.33.00 pre 1 - Development internal update
 ------------------------------------------------------
-
 + iPhone - added forceMixWithOthers member to extradriverdata to force mixing
            with the iPod when in "playandrecord" or "mediaplayback" session
            category.
@@ -657,7 +2008,6 @@
 
 08/04/10 4.33.00 - Initial development internal release
 ------------------------------------------------------
-
 + Add asynchronous I/O support.   FMOD_FILE_ASYNCREADCALLBACK now allows user
   to defer file reads from file callbacks to a later time, rather than satisfying 
   fmod read requests on demand.  Great for streaming world engines.
