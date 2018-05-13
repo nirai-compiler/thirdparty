@@ -1,0 +1,17 @@
+Mon, 30 Mar 2015 20:11:22 +0200
+
+This is OpenAL Soft 1.16.0, downloaded from:
+http://kcat.strangesoft.net/openal-releases/openal-soft-1.16.0.tar.bz2
+
+Compiled with CMake 3.2.1 with MSVC 2010 and the Windows 7 SDK.
+
+CMake was unable to locate dsound.lib, I had to manually point it at its location
+in my copy of the Microsoft DirectX SDK (June 2010).
+
+Disabled SSE 4.1 support in the 64-bit build, all SSE support for the 32-bit one.
+
+Note that the library is called OpenAL32.dll even on 64-bit Windows.
+
+License is LGPL, see COPYING file.
+
+~rdb
