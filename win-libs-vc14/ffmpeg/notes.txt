@@ -1,0 +1,20 @@
+Thu, 22 Aug 2013 08:53:20 +0200
+
+This is FFmpeg git-920046a (2013-08-21), downloaded from:
+http://ffmpeg.zeranoe.com/builds/win32/shared/ffmpeg-20130821-git-920046a-win32-shared.7z
+http://ffmpeg.zeranoe.com/builds/win32/dev/ffmpeg-20130821-git-920046a-win32-dev.7z
+
+Compiled in GPLv3 mode, apparently.  Licenses can be found in the licenses directory.  (Phoo!  Have fun reading.)
+
+I regenerated the .lib files using the following commands:
+lib /def:avcodec-55.def /out:avcodec.lib /machine:x86
+lib /def:avdevice-55.def /out:avdevice.lib /machine:x86
+lib /def:avformat-55.def /out:avformat.lib /machine:x86
+lib /def:avutil-52.def /out:avutil.lib /machine:x86
+lib /def:postproc-52.def /out:postproc.lib /machine:x86
+lib /def:swscale-2.def /out:swscale.lib /machine:x86
+lib /def:swresample-0.def /out:swresample.lib /machine:x86
+lib /def:avfilter-3.def /out:avfilter.lib /machine:x86
+This is necessary to allow linking from VC2010.
+
+~rdb

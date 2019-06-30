@@ -13,12 +13,11 @@ software.
 
 In May 2000, Guido and the Python core development team moved to
 BeOpen.com to form the BeOpen PythonLabs team.  In October of the same
-year, the PythonLabs team moved to Digital Creations (now Zope
-Corporation, see http://www.zope.com).  In 2001, the Python Software
-Foundation (PSF, see http://www.python.org/psf/) was formed, a
-non-profit organization created specifically to own Python-related
-Intellectual Property.  Zope Corporation is a sponsoring member of
-the PSF.
+year, the PythonLabs team moved to Digital Creations, which became
+Zope Corporation.  In 2001, the Python Software Foundation (PSF, see
+https://www.python.org/psf/) was formed, a non-profit organization
+created specifically to own Python-related Intellectual Property.
+Zope Corporation was a sponsoring member of the PSF.
 
 All Python releases are Open Source (see http://www.opensource.org for
 the Open Source Definition).  Historically, most, but not all, Python
@@ -74,9 +73,9 @@ analyze, test, perform and/or display publicly, prepare derivative works,
 distribute, and otherwise use Python alone or in any derivative version,
 provided, however, that PSF's License Agreement and PSF's notice of copyright,
 i.e., "Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010,
-2011, 2012, 2013, 2014, 2015, 2016 Python Software Foundation; All Rights
-Reserved" are retained in Python alone or in any derivative version prepared by
-Licensee.
+2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019 Python Software Foundation;
+All Rights Reserved" are retained in Python alone or in any derivative version
+prepared by Licensee.
 
 3. In the event Licensee prepares a derivative work that is based on
 or incorporates Python or any part thereof, and wants to make
@@ -482,7 +481,7 @@ This copy of Python includes a copy of openssl, which is licensed under the foll
   LICENSE ISSUES
   ==============
 
-  The OpenSSL toolkit stays under a dual license, i.e. both the conditions of
+  The OpenSSL toolkit stays under a double license, i.e. both the conditions of
   the OpenSSL License and the original SSLeay license apply to the toolkit.
   See below for the actual license texts. Actually both licenses are BSD-style
   Open Source licenses. In case of any license issues related to OpenSSL
@@ -492,7 +491,7 @@ This copy of Python includes a copy of openssl, which is licensed under the foll
   ---------------
 
 /* ====================================================================
- * Copyright (c) 1998-2016 The OpenSSL Project.  All rights reserved.
+ * Copyright (c) 1998-2018 The OpenSSL Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -639,7 +638,7 @@ MODIFICATIONS.
 
 GOVERNMENT USE: If you are acquiring this software on behalf of the
 U.S. government, the Government shall have only "Restricted Rights"
-in the software and related documentation as defined in the Federal 
+in the software and related documentation as defined in the Federal
 Acquisition Regulations (FARs) in Clause 52.227.19 (c) (2).  If you
 are acquiring the software on behalf of the Department of Defense, the
 software shall be classified as "Commercial Computer Software" and the
@@ -647,7 +646,7 @@ Government shall have only "Restricted Rights" as defined in Clause
 252.227-7013 (b) (3) of DFARs.  Notwithstanding the foregoing, the
 authors grant the U.S. Government and others acting in its behalf
 permission to use and distribute the software in accordance with the
-terms specified in this license. 
+terms specified in this license.
 
 This copy of Python includes a copy of Tk, which is licensed under the following terms:
 
